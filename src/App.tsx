@@ -318,6 +318,7 @@ function App() {
   }
 
   const onSubmit = async (data: any) => {
+    setIsSubmitting(true)
     console.log('Form submitted with data:', data)
     const dataWithUserId = {
       ...data,
@@ -364,6 +365,8 @@ function App() {
         className: 'custom-toast',
         autoClose: 3000,
       })
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -420,7 +423,7 @@ function App() {
           className='mt-3'
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Submitting...' : '申し込む'}
+          {isSubmitting ? '送信中...' : '申し込む'}
         </Button>
       </form>
     </div>

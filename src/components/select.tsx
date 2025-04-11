@@ -1,5 +1,3 @@
-import { BsChevronDown } from 'react-icons/bs'
-
 export interface SelectOption {
   value: any
   label: string
@@ -45,7 +43,7 @@ const Select: React.FC<SelectProps> = ({
           id={id}
           value={value}
           name={name}
-          className={`mt-1 block w-full bg-white rounded-md border boder-2 px-2 py-1 border-gray-300 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 sm:text-sm appearance-none ${className}`}
+          className={`mt-1 block w-full bg-white rounded-md border boder-2 px-2 py-1 border-gray-300 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${className}`}
           onChange={onchange}
         >
           {placeholder && (
@@ -63,7 +61,6 @@ const Select: React.FC<SelectProps> = ({
             </option>
           ))}
         </select>
-        <BsChevronDown className='absolute right-4 top-5 -translate-y-1/2 pointer-events-none' />
       </div>
       {error && (
         <span className='text-red-500 text-[12px] text-sm'>{error}</span>
