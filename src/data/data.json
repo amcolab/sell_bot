@@ -1,0 +1,697 @@
+[
+    {
+      "id": 1,
+      "value": "農業，林業",
+      "parentId": null
+    },
+    {
+      "id": 2,
+      "value": "農業",
+      "parentId": 1
+    },
+    {
+      "id": 3,
+      "value": "耕種農業",
+      "parentId": 2
+    },
+    {
+      "id": 4,
+      "value": "畜産農業",
+      "parentId": 2
+    },
+    {
+      "id": 5,
+      "value": "農業サービス業（園芸サービス業を除く）",
+      "parentId": 2
+    },
+    {
+      "id": 6,
+      "value": "園芸サービス業",
+      "parentId": 2
+    },
+    {
+      "id": 7,
+      "value": "林業",
+      "parentId": 1
+    },
+    {
+      "id": 8,
+      "value": "育林業",
+      "parentId": 7
+    },
+    {
+      "id": 9,
+      "value": "素材生産業",
+      "parentId": 7
+    },
+    {
+      "id": 10,
+      "value": "特用林産物生産業（きのこ類の栽培を除く）",
+      "parentId": 7
+    },
+    {
+      "id": 11,
+      "value": "林業サービス業",
+      "parentId": 7
+    },
+    {
+      "id": 12,
+      "value": "漁業",
+      "parentId": null
+    },
+    {
+      "id": 13,
+      "value": "漁業（水産養殖業を除く）",
+      "parentId": 12
+    },
+    {
+      "id": 14,
+      "value": "海面漁業",
+      "parentId": 13
+    },
+    {
+      "id": 15,
+      "value": "内水面漁業",
+      "parentId": 13
+    },
+    {
+      "id": 16,
+      "value": "水産養殖業",
+      "parentId": 12
+    },
+    {
+      "id": 17,
+      "value": "海面養殖業",
+      "parentId": 16
+    },
+    {
+      "id": 18,
+      "value": "内水面養殖業",
+      "parentId": 16
+    },
+    {
+      "id": 19,
+      "value": "鉱業，採石業，砂利採取業",
+      "parentId": null
+    },
+    {
+      "id": 20,
+      "value": "鉱業",
+      "parentId": 19
+    },
+    {
+      "id": 21,
+      "value": "金属鉱業",
+      "parentId": 20
+    },
+    {
+      "id": 22,
+      "value": "石炭・亜炭鉱業",
+      "parentId": 20
+    },
+    {
+      "id": 23,
+      "value": "原油・天然ガス鉱業",
+      "parentId": 20
+    },
+    {
+      "id": 24,
+      "value": "採石業",
+      "parentId": 19
+    },
+    {
+      "id": 25,
+      "value": "砂利採取業",
+      "parentId": 19
+    },
+    {
+      "id": 26,
+      "value": "建設業",
+      "parentId": null
+    },
+    {
+      "id": 27,
+      "value": "総合工事業",
+      "parentId": 26
+    },
+    {
+      "id": 28,
+      "value": "職別工事業",
+      "parentId": 26
+    },
+    {
+      "id": 29,
+      "value": "設備工事業",
+      "parentId": 26
+    },
+    {
+      "id": 30,
+      "value": "製造業",
+      "parentId": null
+    },
+    {
+      "id": 31,
+      "value": "食料品製造業",
+      "parentId": 30
+    },
+    {
+      "id": 32,
+      "value": "飲料・たばこ・飼料製造業",
+      "parentId": 30
+    },
+    {
+      "id": 33,
+      "value": "繊維工業",
+      "parentId": 30
+    },
+    {
+      "id": 34,
+      "value": "木材・木製品製造業（家具を除く）",
+      "parentId": 30
+    },
+    {
+      "id": 35,
+      "value": "家具・装備品製造業",
+      "parentId": 30
+    },
+    {
+      "id": 36,
+      "value": "パルプ・紙・紙加工品製造業",
+      "parentId": 30
+    },
+    {
+      "id": 37,
+      "value": "印刷・同関連業",
+      "parentId": 30
+    },
+    {
+      "id": 38,
+      "value": "化学工業",
+      "parentId": 30
+    },
+    {
+      "id": 39,
+      "value": "石油製品・石炭製品製造業",
+      "parentId": 30
+    },
+    {
+      "id": 40,
+      "value": "プラスチック製品製造業（別掲を除く）",
+      "parentId": 30
+    },
+    {
+      "id": 41,
+      "value": "ゴム製品製造業",
+      "parentId": 30
+    },
+    {
+      "id": 42,
+      "value": "なめし革・同製品・毛皮製造業",
+      "parentId": 30
+    },
+    {
+      "id": 43,
+      "value": "窯業・土石製品製造業",
+      "parentId": 30
+    },
+    {
+      "id": 44,
+      "value": "鉄鋼業",
+      "parentId": 30
+    },
+    {
+      "id": 45,
+      "value": "非鉄金属製造業",
+      "parentId": 30
+    },
+    {
+      "id": 46,
+      "value": "金属製品製造業",
+      "parentId": 30
+    },
+    {
+      "id": 47,
+      "value": "はん用機械器具製造業",
+      "parentId": 30
+    },
+    {
+      "id": 48,
+      "value": "生産用機械器具製造業",
+      "parentId": 30
+    },
+    {
+      "id": 49,
+      "value": "業務用機械器具製造業",
+      "parentId": 30
+    },
+    {
+      "id": 50,
+      "value": "電子部品・デバイス・電子回路製造業",
+      "parentId": 30
+    },
+    {
+      "id": 51,
+      "value": "電気機械器具製造業",
+      "parentId": 30
+    },
+    {
+      "id": 52,
+      "value": "情報通信機械器具製造業",
+      "parentId": 30
+    },
+    {
+      "id": 53,
+      "value": "輸送用機械器具製造業",
+      "parentId": 30
+    },
+    {
+      "id": 54,
+      "value": "その他の製造業",
+      "parentId": 30
+    },
+    {
+      "id": 55,
+      "value": "電気・ガス・熱供給・水道業",
+      "parentId": null
+    },
+    {
+      "id": 56,
+      "value": "電気業",
+      "parentId": 55
+    },
+    {
+      "id": 57,
+      "value": "ガス業",
+      "parentId": 55
+    },
+    {
+      "id": 58,
+      "value": "熱供給業",
+      "parentId": 55
+    },
+    {
+      "id": 59,
+      "value": "水道業",
+      "parentId": 55
+    },
+    {
+      "id": 60,
+      "value": "情報通信業",
+      "parentId": null
+    },
+    {
+      "id": 61,
+      "value": "通信業",
+      "parentId": 60
+    },
+    {
+      "id": 62,
+      "value": "放送業",
+      "parentId": 60
+    },
+    {
+      "id": 63,
+      "value": "情報サービス業",
+      "parentId": 60
+    },
+    {
+      "id": 64,
+      "value": "インターネット附随サービス業",
+      "parentId": 60
+    },
+    {
+      "id": 65,
+      "value": "映像・音声・文字情報制作業",
+      "parentId": 60
+    },
+    {
+      "id": 66,
+      "value": "運輸業，郵便業",
+      "parentId": null
+    },
+    {
+      "id": 67,
+      "value": "鉄道業",
+      "parentId": 66
+    },
+    {
+      "id": 68,
+      "value": "道路旅客運送業",
+      "parentId": 66
+    },
+    {
+      "id": 69,
+      "value": "道路貨物運送業",
+      "parentId": 66
+    },
+    {
+      "id": 70,
+      "value": "水運業",
+      "parentId": 66
+    },
+    {
+      "id": 71,
+      "value": "航空運輸業",
+      "parentId": 66
+    },
+    {
+      "id": 72,
+      "value": "倉庫業",
+      "parentId": 66
+    },
+    {
+      "id": 73,
+      "value": "運輸に附帯するサービス業",
+      "parentId": 66
+    },
+    {
+      "id": 74,
+      "value": "郵便業（信書便事業を含む）",
+      "parentId": 66
+    },
+    {
+      "id": 75,
+      "value": "卸売業，小売業",
+      "parentId": null
+    },
+    {
+      "id": 76,
+      "value": "卸売業",
+      "parentId": 75
+    },
+    {
+      "id": 77,
+      "value": "各種商品卸売業",
+      "parentId": 76
+    },
+    {
+      "id": 78,
+      "value": "繊維・衣服等卸売業",
+      "parentId": 76
+    },
+    {
+      "id": 79,
+      "value": "飲食料品卸売業",
+      "parentId": 76
+    },
+    {
+      "id": 80,
+      "value": "建築材料，鉱物・金属材料等卸売業",
+      "parentId": 76
+    },
+    {
+      "id": 81,
+      "value": "機械器具卸売業",
+      "parentId": 76
+    },
+    {
+      "id": 82,
+      "value": "その他の卸売業",
+      "parentId": 76
+    },
+    {
+      "id": 83,
+      "value": "小売業",
+      "parentId": 75
+    },
+    {
+      "id": 84,
+      "value": "各種商品小売業",
+      "parentId": 83
+    },
+    {
+      "id": 85,
+      "value": "織物・衣服・身の回り品小売業",
+      "parentId": 83
+    },
+    {
+      "id": 86,
+      "value": "飲食料品小売業",
+      "parentId": 83
+    },
+    {
+      "id": 87,
+      "value": "機械器具小売業",
+      "parentId": 83
+    },
+    {
+      "id": 88,
+      "value": "その他の小売業",
+      "parentId": 83
+    },
+    {
+      "id": 89,
+      "value": "無店舗小売業",
+      "parentId": 83
+    },
+    {
+      "id": 90,
+      "value": "金融業，保険業",
+      "parentId": null
+    },
+    {
+      "id": 91,
+      "value": "銀行業",
+      "parentId": 90
+    },
+    {
+      "id": 92,
+      "value": "協同組織金融業",
+      "parentId": 90
+    },
+    {
+      "id": 93,
+      "value": "貸金業，クレジットカード業等非預金信用機関",
+      "parentId": 90
+    },
+    {
+      "id": 94,
+      "value": "金融商品取引業，商品先物取引業",
+      "parentId": 90
+    },
+    {
+      "id": 95,
+      "value": "補助的金融業等",
+      "parentId": 90
+    },
+    {
+      "id": 96,
+      "value": "保険業（保険媒介代理業，保険サービス業を含む）",
+      "parentId": 90
+    },
+    {
+      "id": 97,
+      "value": "不動産業，物品賃貸業",
+      "parentId": null
+    },
+    {
+      "id": 98,
+      "value": "不動産業",
+      "parentId": 97
+    },
+    {
+      "id": 99,
+      "value": "土地賃貸業・管理業",
+      "parentId": 98
+    },
+    {
+      "id": 100,
+      "value": "建物賃貸業・管理業",
+      "parentId": 98
+    },
+    {
+      "id": 101,
+      "value": "不動産取引業",
+      "parentId": 98
+    },
+    {
+      "id": 102,
+      "value": "不動産開発業",
+      "parentId": 98
+    },
+    {
+      "id": 103,
+      "value": "物品賃貸業",
+      "parentId": 97
+    },
+    {
+      "id": 104,
+      "value": "学術研究，専門・技術サービス業",
+      "parentId": null
+    },
+    {
+      "id": 105,
+      "value": "学術・開発研究機関",
+      "parentId": 104
+    },
+    {
+      "id": 106,
+      "value": "専門サービス業（他に分類されないもの）",
+      "parentId": 104
+    },
+    {
+      "id": 107,
+      "value": "広告業",
+      "parentId": 104
+    },
+    {
+      "id": 108,
+      "value": "技術サービス業（他に分類されないもの）",
+      "parentId": 104
+    },
+    {
+      "id": 109,
+      "value": "宿泊業，飲食サービス業",
+      "parentId": null
+    },
+    {
+      "id": 110,
+      "value": "宿泊業",
+      "parentId": 109
+    },
+    {
+      "id": 111,
+      "value": "飲食店",
+      "parentId": 109
+    },
+    {
+      "id": 112,
+      "value": "持ち帰り・配達飲食サービス業",
+      "parentId": 109
+    },
+    {
+      "id": 113,
+      "value": "生活関連サービス業，娯楽業",
+      "parentId": null
+    },
+    {
+      "id": 114,
+      "value": "洗濯・理容・美容・浴場業",
+      "parentId": 113
+    },
+    {
+      "id": 115,
+      "value": "その他の生活関連サービス業",
+      "parentId": 113
+    },
+    {
+      "id": 116,
+      "value": "娯楽業",
+      "parentId": 113
+    },
+    {
+      "id": 117,
+      "value": "教育，学習支援業",
+      "parentId": null
+    },
+    {
+      "id": 118,
+      "value": "学校教育",
+      "parentId": 117
+    },
+    {
+      "id": 119,
+      "value": "その他の教育，学習支援業",
+      "parentId": 117
+    },
+    {
+      "id": 120,
+      "value": "医療，福祉",
+      "parentId": null
+    },
+    {
+      "id": 121,
+      "value": "医療業",
+      "parentId": 120
+    },
+    {
+      "id": 122,
+      "value": "保健衛生",
+      "parentId": 120
+    },
+    {
+      "id": 123,
+      "value": "社会保険・社会福祉・介護事業",
+      "parentId": 120
+    },
+    {
+      "id": 124,
+      "value": "複合サービス事業",
+      "parentId": null
+    },
+    {
+      "id": 125,
+      "value": "郵便局",
+      "parentId": 124
+    },
+    {
+      "id": 126,
+      "value": "協同組合（他に分類されないもの）",
+      "parentId": 124
+    },
+    {
+      "id": 127,
+      "value": "サービス業（他に分類されないもの）",
+      "parentId": null
+    },
+    {
+      "id": 128,
+      "value": "廃棄物処理業",
+      "parentId": 127
+    },
+    {
+      "id": 129,
+      "value": "自動車整備業",
+      "parentId": 127
+    },
+    {
+      "id": 130,
+      "value": "機械等修理業（別掲を除く）",
+      "parentId": 127
+    },
+    {
+      "id": 131,
+      "value": "職業紹介・労働者派遣業",
+      "parentId": 127
+    },
+    {
+      "id": 132,
+      "value": "その他の事業サービス業",
+      "parentId": 127
+    },
+    {
+      "id": 133,
+      "value": "政治・経済・文化団体",
+      "parentId": 127
+    },
+    {
+      "id": 134,
+      "value": "宗教",
+      "parentId": 127
+    },
+    {
+      "id": 135,
+      "value": "その他のサービス業",
+      "parentId": 127
+    },
+    {
+      "id": 136,
+      "value": "公務（他に分類されないもの）",
+      "parentId": null
+    },
+    {
+      "id": 137,
+      "value": "国家公務",
+      "parentId": 136
+    },
+    {
+      "id": 138,
+      "value": "地方公務",
+      "parentId": 136
+    },
+    {
+      "id": 139,
+      "value": "分類不能の産業",
+      "parentId": null
+    }
+  ]
