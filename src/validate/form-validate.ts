@@ -13,28 +13,70 @@ const industrySchema = yup.object().shape({
     then: (schema) => schema.required('業種カテゴリー3は必須です'),
     otherwise: (schema) => schema.notRequired(),
   }),
-  classification: yup.string().required('業種分類の例外は必須です'),
+  specialCase: yup.string().required('業種区分特例は必須です'),
+  revenuePercentage1: yup.string().when('specialCase', {
+    is: 'under50',
+    then: (schema) => schema
+      .required('主たる事業の売上は必須です')
+      .test('is-valid-percentage', '有効なパーセンテージを入力してください', (value) => {
+        if (!value) return false
+        const numValue = Number(value)
+        return !isNaN(numValue) && numValue >= 0 && numValue <= 100
+      }),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  revenuePercentage2: yup.string().when('specialCase', {
+    is: 'under50',
+    then: (schema) => schema
+      .required('2位の売上は必須です')
+      .test('is-valid-percentage', '有効なパーセンテージを入力してください', (value) => {
+        if (!value) return false
+        const numValue = Number(value)
+        return !isNaN(numValue) && numValue >= 0 && numValue <= 100
+      }),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  revenuePercentage3: yup.string().when(['specialCase', 'revenuePercentage1', 'revenuePercentage2'], {
+    is: (specialCase: string, rev1: string, rev2: string) => 
+      specialCase === 'under50' && 
+      rev1 && rev2 && 
+      (Number(rev1) + Number(rev2)) < 50,
+    then: (schema) => schema
+      .required('3位の売上は必須です')
+      .test('is-valid-percentage', '有効なパーセンテージを入力してください', (value) => {
+        if (!value) return false
+        const numValue = Number(value)
+        return !isNaN(numValue) && numValue >= 0 && numValue <= 100
+      }),
+    otherwise: (schema) => schema.notRequired(),
+  }),
 })
 
 // Define financial schema to reuse
 const financialSchema = yup.object().shape({
   profit: yup
     .string()
-    .required('利益は必須です')
-    .matches(/^[\d,]+$/, '利益は数字のみ入力してください')
+    .transform((value) => {
+      if (!value) return '0'
+      return value.replace(/,/g, '')
+    })
+    .matches(/^\d*$/, '利益は数字のみ入力してください')
     .test('is-valid-yen', '有効な金額を入力してください', (value) => {
-      if (!value) return true
-      const numericValue = value.replace(/,/g, '')
-      return !isNaN(Number(numericValue)) && Number(numericValue) >= 0
+      if (!value || value === '0') return true
+      const numValue = Number(value)
+      return !isNaN(numValue) && numValue >= 0 && numValue <= 999999999999
     }),
   dividends: yup
     .string()
-    .required('配当金は必須です')
-    .matches(/^[\d,]+$/, '配当金は数字のみ入力してください')
+    .transform((value) => {
+      if (!value) return '0'
+      return value.replace(/,/g, '')
+    })
+    .matches(/^\d*$/, '配当は数字のみ入力してください')
     .test('is-valid-yen', '有効な金額を入力してください', (value) => {
-      if (!value) return true
-      const numericValue = value.replace(/,/g, '')
-      return !isNaN(Number(numericValue)) && Number(numericValue) >= 0
+      if (!value || value === '0') return true
+      const numValue = Number(value)
+      return !isNaN(numValue) && numValue >= 0 && numValue <= 999999999999
     }),
 })
 
@@ -71,8 +113,10 @@ export const schema = yup.object().shape({
 
   // Report delivery information
   reportreceiving: yup.string().required('レポート受信方法は必須です'),
+  postalCode: yup.string(),
   receiverAddress: yup.string().required('レポート送付先住所は必須です'),
-  referrerName: yup.string().required('紹介者名は必須です'),
+  referrerName: yup.string(),
+  referreCompanyName: yup.string(),
 
   // Registration information
   applicationType: yup.string().required('申請種別は必須です'),
@@ -148,11 +192,54 @@ export const schema = yup.object().shape({
               })
             }
 
-            if (!subsidiary.industry?.classification) {
-              return this.createError({
-                message: `子会社${i}の業種分類の例外は必須です`,
-                path: `subsidiaries[${i}].industry.classification`,
-              })
+            // Validate revenue percentages if specialCase is under50
+            if (subsidiary.industry?.specialCase === 'under50') {
+              // Validate revenuePercentage1
+              if (!subsidiary.industry.revenuePercentage1) {
+                return this.createError({
+                  message: `子会社${i}の主たる事業の売上は必須です`,
+                  path: `subsidiaries[${i}].industry.revenuePercentage1`,
+                })
+              }
+              const rev1 = Number(subsidiary.industry.revenuePercentage1)
+              if (isNaN(rev1) || rev1 < 0 || rev1 > 100) {
+                return this.createError({
+                  message: `子会社${i}の主たる事業の売上は有効なパーセンテージを入力してください`,
+                  path: `subsidiaries[${i}].industry.revenuePercentage1`,
+                })
+              }
+
+              // Validate revenuePercentage2
+              if (!subsidiary.industry.revenuePercentage2) {
+                return this.createError({
+                  message: `子会社${i}の2位の売上は必須です`,
+                  path: `subsidiaries[${i}].industry.revenuePercentage2`,
+                })
+              }
+              const rev2 = Number(subsidiary.industry.revenuePercentage2)
+              if (isNaN(rev2) || rev2 < 0 || rev2 > 100) {
+                return this.createError({
+                  message: `子会社${i}の2位の売上は有効なパーセンテージを入力してください`,
+                  path: `subsidiaries[${i}].industry.revenuePercentage2`,
+                })
+              }
+
+              // Validate revenuePercentage3 if sum of rev1 and rev2 is less than 50
+              if (rev1 + rev2 < 50) {
+                if (!subsidiary.industry.revenuePercentage3) {
+                  return this.createError({
+                    message: `子会社${i}の3位の売上は必須です`,
+                    path: `subsidiaries[${i}].industry.revenuePercentage3`,
+                  })
+                }
+                const rev3 = Number(subsidiary.industry.revenuePercentage3)
+                if (isNaN(rev3) || rev3 < 0 || rev3 > 100) {
+                  return this.createError({
+                    message: `子会社${i}の3位の売上は有効なパーセンテージを入力してください`,
+                    path: `subsidiaries[${i}].industry.revenuePercentage3`,
+                  })
+                }
+              }
             }
 
             if (!subsidiary.financial?.profit) {
@@ -177,86 +264,124 @@ export const schema = yup.object().shape({
   }),
   currentSalary: yup
     .string()
-    .required('現在の給与は必須です')
-    .matches(/^[\d,]+$/, '数字のみ入力してください')
+    .transform((value) => {
+      if (!value) return '0'
+      return value.replace(/,/g, '')
+    })
+    .matches(/^\d*$/, '数字のみ入力してください')
     .test('is-valid-yen', '有効な金額を入力してください', (value) => {
       if (!value) return true
-      const numericValue = value.replace(/,/g, '')
-      return !isNaN(Number(numericValue)) && Number(numericValue) >= 0
+      const numValue = Number(value)
+      return !isNaN(numValue) && numValue >= 0 && numValue <= 999999999999
     }),
   numberOfYears: yup
     .string()
-    .required('勤続年数は必須です')
-    .matches(/^[\d,]+$/, '数字のみ入力してください')
+    .transform((value) => {
+      if (!value) return '0'
+      return value.replace(/,/g, '')
+    })
+    .matches(/^\d*$/, '数字のみ入力してください')
     .test('is-valid-yen', '有効な数値を入力してください', (value) => {
       if (!value) return true
-      const numericValue = value.replace(/,/g, '')
-      return !isNaN(Number(numericValue)) && Number(numericValue) >= 0
+      const numValue = Number(value)
+      return !isNaN(numValue) && numValue >= 0 && numValue <= 100
     }),
   maritalStatus: yup.string().required('婚姻状況は必須です'),
   numberOfChildren: yup
     .string()
-    .matches(/^[\d,]+$/, '数字のみ入力してください')
+    .transform((value) => {
+      if (!value) return '0'
+      return value.replace(/,/g, '')
+    })
+    .matches(/^\d*$/, '数字のみ入力してください')
     .test('is-valid-yen', '有効な数値を入力してください', (value) => {
       if (!value) return true
-      const numericValue = value.replace(/,/g, '')
-      return !isNaN(Number(numericValue)) && Number(numericValue) >= 0
+      const numValue = Number(value)
+      return !isNaN(numValue)
     }),
   cashAndDeposits: yup
     .string()
-    .matches(/^[\d,]+$/, '数字のみ入力してください')
+    .transform((value) => {
+      if (!value) return '0'
+      return value.replace(/,/g, '')
+    })
+    .matches(/^\d*$/, '数字のみ入力してください')
     .test('is-valid-yen', '有効な金額を入力してください', (value) => {
       if (!value) return true
-      const numericValue = value.replace(/,/g, '')
-      return !isNaN(Number(numericValue)) && Number(numericValue) >= 0
+      const numValue = Number(value)
+      return !isNaN(numValue) && numValue >= 0 && numValue <= 999999999999
     }),
   retirementBenefits: yup
     .string()
-    .matches(/^[\d,]+$/, '数字のみ入力してください')
+    .transform((value) => {
+      if (!value) return '0'
+      return value.replace(/,/g, '')
+    })
+    .matches(/^\d*$/, '数字のみ入力してください')
     .test('is-valid-yen', '有効な金額を入力してください', (value) => {
       if (!value) return true
-      const numericValue = value.replace(/,/g, '')
-      return !isNaN(Number(numericValue)) && Number(numericValue) >= 0
+      const numValue = Number(value)
+      return !isNaN(numValue) && numValue >= 0 && numValue <= 999999999999
     }),
   realEstate: yup
     .string()
-    .matches(/^[\d,]+$/, '数字のみ入力してください')
+    .transform((value) => {
+      if (!value) return '0'
+      return value.replace(/,/g, '')
+    })
+    .matches(/^\d*$/, '数字のみ入力してください')
     .test('is-valid-yen', '有効な金額を入力してください', (value) => {
       if (!value) return true
-      const numericValue = value.replace(/,/g, '')
-      return !isNaN(Number(numericValue)) && Number(numericValue) >= 0
+      const numValue = Number(value)
+      return !isNaN(numValue) && numValue >= 0 && numValue <= 999999999999
     }),
   securities: yup
     .string()
-    .matches(/^[\d,]+$/, '数字のみ入力してください')
+    .transform((value) => {
+      if (!value) return '0'
+      return value.replace(/,/g, '')
+    })
+    .matches(/^\d*$/, '数字のみ入力してください')
     .test('is-valid-yen', '有効な金額を入力してください', (value) => {
       if (!value) return true
-      const numericValue = value.replace(/,/g, '')
-      return !isNaN(Number(numericValue)) && Number(numericValue) >= 0
+      const numValue = Number(value)
+      return !isNaN(numValue) && numValue >= 0 && numValue <= 999999999999
     }),
   amountOfLifeInsurance: yup
     .string()
-    .matches(/^[\d,]+$/, '数字のみ入力してください')
+    .transform((value) => {
+      if (!value) return '0'
+      return value.replace(/,/g, '')
+    })
+    .matches(/^\d*$/, '数字のみ入力してください')
     .test('is-valid-yen', '有効な金額を入力してください', (value) => {
       if (!value) return true
-      const numericValue = value.replace(/,/g, '')
-      return !isNaN(Number(numericValue)) && Number(numericValue) >= 0
+      const numValue = Number(value)
+      return !isNaN(numValue) && numValue >= 0 && numValue <= 999999999999
     }),
   otherAssets: yup
     .string()
-    .matches(/^[\d,]+$/, '数字のみ入力してください')
+    .transform((value) => {
+      if (!value) return '0'
+      return value.replace(/,/g, '')
+    })
+    .matches(/^\d*$/, '数字のみ入力してください')
     .test('is-valid-yen', '有効な金額を入力してください', (value) => {
       if (!value) return true
-      const numericValue = value.replace(/,/g, '')
-      return !isNaN(Number(numericValue)) && Number(numericValue) >= 0
+      const numValue = Number(value)
+      return !isNaN(numValue) && numValue >= 0 && numValue <= 999999999999
     }),
   debts: yup
     .string()
-    .matches(/^[\d,]+$/, '数字のみ入力してください')
+    .transform((value) => {
+      if (!value) return '0'
+      return value.replace(/,/g, '')
+    })
+    .matches(/^\d*$/, '数字のみ入力してください')
     .test('is-valid-yen', '有効な金額を入力してください', (value) => {
       if (!value) return true
-      const numericValue = value.replace(/,/g, '')
-      return !isNaN(Number(numericValue)) && Number(numericValue) >= 0
+      const numValue = Number(value)
+      return !isNaN(numValue) && numValue >= 0 && numValue <= 999999999999
     }),
   voucher: yup.string(),
 })

@@ -30,31 +30,38 @@ export default function Radio({
   required,
 }: RadioProps) {
   return (
-    <div className='flex flex-col justify-center'>
+    <div className='form-group'>
       {label && (
-        <label htmlFor={id} className={`text-[12px] pt-3 ${classNameLabel}`}>
-          {label} {required && <span className='text-red-500'>※</span>}
+        <label
+          htmlFor={id}
+          className={`block mb-1.5 text-[#0a2e52] text-sm font-medium ${classNameLabel}`}
+        >
+          {label} {required && <span className='text-[#e74c3c]'>*</span>}
         </label>
       )}
-      <div className='flex items-center'>
-        <input
-          id={id}
-          type='radio'
-          name={name}
-          className={className}
-          onChange={onChange}
-          onBlur={onBlur}
-          checked={checked}
-          disabled={disabled}
-          aria-invalid={!!error}
-        />
-        {title && (
-          <label htmlFor={id} className='ml-2 text-[12px] pt-1 cursor-pointer'>
-            {title}
-          </label>
-        )}
+      <div className='radio-group'>
+        <div className='radio-container'>
+          <input
+            id={id}
+            type='radio'
+            name={name}
+            className={`mr-1.5 ${className}`}
+            onChange={onChange}
+            onBlur={onBlur}
+            checked={checked}
+            disabled={disabled}
+            aria-invalid={!!error}
+          />
+          {title && (
+            <label htmlFor={id} className='text-sm cursor-pointer'>
+              {title}
+            </label>
+          )}
+        </div>
       </div>
-      {error && <span className='text-red-500 text-[12px] mt-1'>{error}</span>}
+      {error && (
+        <span className='block mt-1 text-sm text-[#e74c3c]'>{error}</span>
+      )}
     </div>
   )
 }

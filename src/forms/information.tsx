@@ -12,9 +12,16 @@ export default function InformationForm({
   }
 
   return (
-    <>
-      <div className='h1 text-center text-[25px]'>基本情報</div>
+    <div className="mt-2">
       <div>
+        <h3 className="text-lg font-semibold mb-3">
+          <span className="inline-block w-8 h-8 leading-8 text-center text-white bg-[#0a2e52] rounded-full mr-2">
+            1
+          </span>
+          基本情報
+        </h3>
+      </div>
+      <div className='mb-5'>
         <Controller
           name='registrationDate'
           control={control}
@@ -25,7 +32,6 @@ export default function InformationForm({
               type='date'
               name='registrationDate'
               placeholder='YYYY-MM-DD'
-              className='form-input'
               error={errors.registrationDate?.message}
               onchange={field.onChange}
               onblur={() => handleBlur('registrationDate', field.value)}
@@ -35,7 +41,7 @@ export default function InformationForm({
           )}
         />
       </div>
-      <div className='mt-3'>
+      <div className='mb-5'>
         <Controller
           name='legalName'
           control={control}
@@ -46,7 +52,6 @@ export default function InformationForm({
               type='text'
               name='legalName'
               placeholder='法人名を入力してください'
-              className='form-input'
               error={errors.legalName?.message}
               onchange={field.onChange}
               onblur={() => handleBlur('legalName', field.value)}
@@ -56,18 +61,17 @@ export default function InformationForm({
           )}
         />
       </div>
-      <div className='mt-3'>
+      <div className='mb-5'>
         <Controller
           name='katakanaName'
           control={control}
           render={({ field }) => (
             <Input
-              label='フリガナ'
+              label='法人名フリガナ'
               id='katakanaName'
               type='text'
               name='katakanaName'
-              placeholder='フリガナを入力してください'
-              className='form-input'
+              placeholder='法人名フリガナを入力してください'
               error={errors.katakanaName?.message}
               onchange={field.onChange}
               onblur={() => handleBlur('katakanaName', field.value)}
@@ -77,7 +81,26 @@ export default function InformationForm({
           )}
         />
       </div>
-      <div className='mt-3 flex gap-2'>
+      <div className='mb-5'>
+        <Controller
+          name='position'
+          control={control}
+          render={({ field }) => (
+            <Input
+              label='役職名'
+              id='position'
+              type='text'
+              name='position'
+              placeholder='役職名を入力してください'
+              error={errors.position?.message}
+              onchange={field.onChange}
+              onblur={() => handleBlur('position', field.value)}
+              value={field.value}
+            />
+          )}
+        />
+      </div>
+      <div className='mb-5 flex gap-4'>
         <Controller
           name='personChargeFirtName'
           control={control}
@@ -88,7 +111,6 @@ export default function InformationForm({
               type='text'
               name='personChargeFirtName'
               placeholder='姓を入力してください'
-              className='form-input'
               error={errors.personChargeFirtName?.message}
               onchange={field.onChange}
               onblur={() => handleBlur('personChargeFirtName', field.value)}
@@ -107,7 +129,6 @@ export default function InformationForm({
               type='text'
               name='personChargeLastName'
               placeholder='名を入力してください'
-              className='form-input'
               error={errors.personChargeLastName?.message}
               classNameLabel='opacity-0'
               onchange={field.onChange}
@@ -118,7 +139,7 @@ export default function InformationForm({
           )}
         />
       </div>
-      <div className='mt-3 flex gap-2'>
+      <div className='mb-5 flex gap-4'>
         <Controller
           name='personChargeFirtNameKatana'
           control={control}
@@ -129,7 +150,6 @@ export default function InformationForm({
               type='text'
               name='personChargeFirtNameKatana'
               placeholder='姓（フリガナ）を入力してください'
-              className='form-input'
               error={errors.personChargeFirtNameKatana?.message}
               onchange={field.onChange}
               onblur={() =>
@@ -150,7 +170,6 @@ export default function InformationForm({
               type='text'
               name='personChargeLastNameKatana'
               placeholder='名（フリガナ）を入力してください'
-              className='form-input'
               error={errors.personChargeLastNameKatana?.message}
               classNameLabel='opacity-0'
               onchange={field.onChange}
@@ -163,27 +182,8 @@ export default function InformationForm({
           )}
         />
       </div>
-      <div className='mt-3'>
-        <Controller
-          name='position'
-          control={control}
-          render={({ field }) => (
-            <Input
-              label='役職名'
-              id='position'
-              type='text'
-              name='position'
-              placeholder='役職名を入力してください'
-              className='form-input'
-              error={errors.position?.message}
-              onchange={field.onChange}
-              onblur={() => handleBlur('position', field.value)}
-              value={field.value}
-            />
-          )}
-        />
-      </div>
-      <div className='mt-3'>
+
+      <div className='mb-5'>
         <Controller
           name='email'
           control={control}
@@ -194,7 +194,6 @@ export default function InformationForm({
               type='text'
               name='email'
               placeholder='メールアドレスを入力してください'
-              className='form-input'
               error={errors.email?.message}
               onchange={field.onChange}
               onblur={() => handleBlur('email', field.value)}
@@ -204,7 +203,7 @@ export default function InformationForm({
           )}
         />
       </div>
-      <div className='mt-3'>
+      <div className='mb-5'>
         <Controller
           name='phone'
           control={control}
@@ -215,7 +214,6 @@ export default function InformationForm({
               type='text'
               name='phone'
               placeholder='電話番号を入力してください'
-              className='form-input'
               error={errors.phone?.message}
               onchange={field.onChange}
               onblur={() => handleBlur('phone', field.value)}
@@ -225,6 +223,26 @@ export default function InformationForm({
           )}
         />
       </div>
-    </>
+      <div className='mb-5'>
+        <Controller
+          name='voucher'
+          control={control}
+          render={({ field }) => (
+            <Input
+              label='クーポン'
+              id='voucher'
+              type='text'
+              name='voucher'
+              placeholder='クーポンを入力してください'
+              error={errors.voucher?.message}
+              onchange={field.onChange}
+              onblur={() => handleBlur('voucher', field.value)}
+              value={field.value}
+            />
+          )}
+        />
+      </div>
+      <div className='h-px bg-[#eee] my-5'></div>
+    </div>
   )
 }

@@ -9,13 +9,21 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage }: any) => {
   }
 
   return (
-    <>
-      <div className='h1 text-center text-[25px]'>相続資産</div>
-      <div className='mt-3'>
-        <label className='block font-medium text-[12px]'>
-          配偶者の有無 <span className='text-red-500'>※</span>
+    <div className="mt-2">
+      <div>
+        <h3 className="text-lg font-semibold mb-3">
+          <span className="inline-block w-8 h-8 leading-8 text-center text-white bg-[#0a2e52] rounded-full mr-2">
+            6
+          </span>
+          相続資産
+        </h3>
+      </div>
+      <div className='mb-5'>
+        <h3 className='text-lg font-semibold mb-3'>法定相続人確認</h3>
+        <label className='block mb-1.5 text-[#0a2e52] text-sm font-medium'>
+          配偶者の有無 <span className='text-[#e74c3c]'>*</span>
         </label>
-        <div className='flex gap-4 items-center'>
+        <div className='flex gap-4'>
           <Controller
             name='maritalStatus'
             control={control}
@@ -26,7 +34,6 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage }: any) => {
                   id='maritalStatus-introducer'
                   type='radio'
                   name='maritalStatus'
-                  className='form-radio'
                   onChange={() => {
                     field.onChange('あり')
                     handleBlur('maritalStatus', 'あり')
@@ -40,7 +47,6 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage }: any) => {
                   id='maritalStatus-mail'
                   type='radio'
                   name='maritalStatus'
-                  className='form-radio'
                   onChange={() => {
                     field.onChange('なし')
                     handleBlur('maritalStatus', 'なし')
@@ -54,13 +60,13 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage }: any) => {
           />
         </div>
         {errors.maritalStatus && (
-          <span className='text-red-500 text-sm mt-1'>
+          <span className='block mt-1 text-sm text-[#e74c3c]'>
             {errors.maritalStatus.message}
           </span>
         )}
       </div>
 
-      <div className='mt-3'>
+      <div className='mb-5'>
         <Controller
           name='numberOfChildren'
           control={control}
@@ -71,16 +77,30 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage }: any) => {
               type='text'
               name='numberOfChildren'
               placeholder='子どもの人数を入力してください'
-              className='form-input'
               error={errors.numberOfChildren?.message}
-              onchange={field.onChange}
-              onblur={() => handleBlur('numberOfChildren', field.value)}
-              value={field.value}
+              onchange={(e) => {
+                const value = e.target.value.replace(/[^\d]/g, '')
+                if (value === '0') {
+                  field.onChange('0')
+                } else {
+                  const cleanValue = value.replace(/^0+/, '')
+                  field.onChange(cleanValue)
+                }
+              }}
+              onblur={() => {
+                if (!field.value) {
+                  field.onChange('0')
+                  handleBlur('numberOfChildren', '0')
+                } else {
+                  handleBlur('numberOfChildren', field.value)
+                }
+              }}
+              value={field.value || '0'}
             />
           )}
         />
       </div>
-      <div className='mt-3'>
+      <div className='mb-5'>
         <Controller
           name='cashAndDeposits'
           control={control}
@@ -90,20 +110,32 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage }: any) => {
               id='cashAndDeposits'
               type='text'
               name='cashAndDeposits'
-              placeholder='現預金を入力してください'
-              className='form-input'
+              placeholder='現預金を入力してください（単位：円）'
               error={errors.cashAndDeposits?.message}
               onchange={(e) => {
-                const formattedValue = formatNumber(e.target.value)
-                field.onChange(formattedValue)
-                saveDataToLocalStorage('cashAndDeposits', formattedValue)
+                const value = e.target.value.replace(/[^\d]/g, '')
+                if (value === '0') {
+                  field.onChange('0')
+                  saveDataToLocalStorage('cashAndDeposits', '0')
+                } else {
+                  const cleanValue = value.replace(/^0+/, '')
+                  const formattedValue = formatNumber(cleanValue)
+                  field.onChange(formattedValue)
+                  saveDataToLocalStorage('cashAndDeposits', formattedValue)
+                }
               }}
-              value={field.value ? formatNumber(field.value) : ''}
+              onblur={() => {
+                if (!field.value) {
+                  field.onChange('0')
+                  saveDataToLocalStorage('cashAndDeposits', '0')
+                }
+              }}
+              value={field.value ? `¥${formatNumber(field.value)}` : '¥0'}
             />
           )}
         />
       </div>
-      <div className='mt-3'>
+      <div className='mb-5'>
         <Controller
           name='retirementBenefits'
           control={control}
@@ -113,20 +145,32 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage }: any) => {
               id='retirementBenefits'
               type='text'
               name='retirementBenefits'
-              placeholder='退職金を入力してください'
-              className='form-input'
+              placeholder='退職金を入力してください（単位：円）'
               error={errors.retirementBenefits?.message}
               onchange={(e) => {
-                const formattedValue = formatNumber(e.target.value)
-                field.onChange(formattedValue)
-                saveDataToLocalStorage('retirementBenefits', formattedValue)
+                const value = e.target.value.replace(/[^\d]/g, '')
+                if (value === '0') {
+                  field.onChange('0')
+                  saveDataToLocalStorage('retirementBenefits', '0')
+                } else {
+                  const cleanValue = value.replace(/^0+/, '')
+                  const formattedValue = formatNumber(cleanValue)
+                  field.onChange(formattedValue)
+                  saveDataToLocalStorage('retirementBenefits', formattedValue)
+                }
               }}
-              value={field.value ? formatNumber(field.value) : ''}
+              onblur={() => {
+                if (!field.value) {
+                  field.onChange('0')
+                  saveDataToLocalStorage('retirementBenefits', '0')
+                }
+              }}
+              value={field.value ? `¥${formatNumber(field.value)}` : '¥0'}
             />
           )}
         />
       </div>
-      <div className='mt-3'>
+      <div className='mb-5'>
         <Controller
           name='realEstate'
           control={control}
@@ -136,20 +180,32 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage }: any) => {
               id='realEstate'
               type='text'
               name='realEstate'
-              placeholder='不動産を入力してください'
-              className='form-input'
+              placeholder='不動産を入力してください（単位：円）'
               error={errors.realEstate?.message}
               onchange={(e) => {
-                const formattedValue = formatNumber(e.target.value)
-                field.onChange(formattedValue)
-                saveDataToLocalStorage('realEstate', formattedValue)
+                const value = e.target.value.replace(/[^\d]/g, '')
+                if (value === '0') {
+                  field.onChange('0')
+                  saveDataToLocalStorage('realEstate', '0')
+                } else {
+                  const cleanValue = value.replace(/^0+/, '')
+                  const formattedValue = formatNumber(cleanValue)
+                  field.onChange(formattedValue)
+                  saveDataToLocalStorage('realEstate', formattedValue)
+                }
               }}
-              value={field.value ? formatNumber(field.value) : ''}
+              onblur={() => {
+                if (!field.value) {
+                  field.onChange('0')
+                  saveDataToLocalStorage('realEstate', '0')
+                }
+              }}
+              value={field.value ? `¥${formatNumber(field.value)}` : '¥0'}
             />
           )}
         />
       </div>
-      <div className='mt-3'>
+      <div className='mb-5'>
         <Controller
           name='securities'
           control={control}
@@ -159,44 +215,67 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage }: any) => {
               id='securities'
               type='text'
               name='securities'
-              placeholder='有価証券を入力してください'
-              className='form-input'
+              placeholder='有価証券を入力してください（単位：円）'
               error={errors.securities?.message}
               onchange={(e) => {
-                const formattedValue = formatNumber(e.target.value)
-                field.onChange(formattedValue)
-                saveDataToLocalStorage('securities', formattedValue)
+                const value = e.target.value.replace(/[^\d]/g, '')
+                if (value === '0') {
+                  field.onChange('0')
+                  saveDataToLocalStorage('securities', '0')
+                } else {
+                  const cleanValue = value.replace(/^0+/, '')
+                  const formattedValue = formatNumber(cleanValue)
+                  field.onChange(formattedValue)
+                  saveDataToLocalStorage('securities', formattedValue)
+                }
               }}
-              value={field.value ? formatNumber(field.value) : ''}
+              onblur={() => {
+                if (!field.value) {
+                  field.onChange('0')
+                  saveDataToLocalStorage('securities', '0')
+                }
+              }}
+              value={field.value ? `¥${formatNumber(field.value)}` : '¥0'}
             />
           )}
         />
       </div>
-      <div className='mt-3'>
+      <div className='mb-5'>
         <Controller
           name='amountOfLifeInsurance'
           control={control}
           render={({ field }) => (
             <Input
-              label='生命保険等の額
-'
+              label='生命保険等の額'
               id='amountOfLifeInsurance'
               type='text'
               name='amountOfLifeInsurance'
-              placeholder='生命保険等の額を入力してください'
-              className='form-input'
+              placeholder='生命保険等の額を入力してください（単位：円）'
               error={errors.amountOfLifeInsurance?.message}
               onchange={(e) => {
-                const formattedValue = formatNumber(e.target.value)
-                field.onChange(formattedValue)
-                saveDataToLocalStorage('amountOfLifeInsurance', formattedValue)
+                const value = e.target.value.replace(/[^\d]/g, '')
+                if (value === '0') {
+                  field.onChange('0')
+                  saveDataToLocalStorage('amountOfLifeInsurance', '0')
+                } else {
+                  const cleanValue = value.replace(/^0+/, '')
+                  const formattedValue = formatNumber(cleanValue)
+                  field.onChange(formattedValue)
+                  saveDataToLocalStorage('amountOfLifeInsurance', formattedValue)
+                }
               }}
-              value={field.value ? formatNumber(field.value) : ''}
+              onblur={() => {
+                if (!field.value) {
+                  field.onChange('0')
+                  saveDataToLocalStorage('amountOfLifeInsurance', '0')
+                }
+              }}
+              value={field.value ? `¥${formatNumber(field.value)}` : '¥0'}
             />
           )}
         />
       </div>
-      <div className='mt-3'>
+      <div className='mb-5'>
         <Controller
           name='otherAssets'
           control={control}
@@ -206,20 +285,32 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage }: any) => {
               id='otherAssets'
               type='text'
               name='otherAssets'
-              placeholder='その他財産を入力してください'
-              className='form-input'
+              placeholder='その他財産を入力してください（単位：円）'
               error={errors.otherAssets?.message}
               onchange={(e) => {
-                const formattedValue = formatNumber(e.target.value)
-                field.onChange(formattedValue)
-                saveDataToLocalStorage('otherAssets', formattedValue)
+                const value = e.target.value.replace(/[^\d]/g, '')
+                if (value === '0') {
+                  field.onChange('0')
+                  saveDataToLocalStorage('otherAssets', '0')
+                } else {
+                  const cleanValue = value.replace(/^0+/, '')
+                  const formattedValue = formatNumber(cleanValue)
+                  field.onChange(formattedValue)
+                  saveDataToLocalStorage('otherAssets', formattedValue)
+                }
               }}
-              value={field.value ? formatNumber(field.value) : ''}
+              onblur={() => {
+                if (!field.value) {
+                  field.onChange('0')
+                  saveDataToLocalStorage('otherAssets', '0')
+                }
+              }}
+              value={field.value ? `¥${formatNumber(field.value)}` : '¥0'}
             />
           )}
         />
       </div>
-      <div className='mt-3'>
+      <div className='mb-5'>
         <Controller
           name='debts'
           control={control}
@@ -229,20 +320,33 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage }: any) => {
               id='debts'
               type='text'
               name='debts'
-              placeholder='債務を入力してください'
-              className='form-input'
+              placeholder='債務を入力してください（単位：円）'
               error={errors.debts?.message}
               onchange={(e) => {
-                const formattedValue = formatNumber(e.target.value)
-                field.onChange(formattedValue)
-                saveDataToLocalStorage('debts', formattedValue)
+                const value = e.target.value.replace(/[^\d]/g, '')
+                if (value === '0') {
+                  field.onChange('0')
+                  saveDataToLocalStorage('debts', '0')
+                } else {
+                  const cleanValue = value.replace(/^0+/, '')
+                  const formattedValue = formatNumber(cleanValue)
+                  field.onChange(formattedValue)
+                  saveDataToLocalStorage('debts', formattedValue)
+                }
               }}
-              value={field.value ? formatNumber(field.value) : ''}
+              onblur={() => {
+                if (!field.value) {
+                  field.onChange('0')
+                  saveDataToLocalStorage('debts', '0')
+                }
+              }}
+              value={field.value ? `¥${formatNumber(field.value)}` : '¥0'}
             />
           )}
         />
       </div>
-    </>
+      <div className='h-px bg-[#eee] my-5'></div>
+    </div>
   )
 }
 

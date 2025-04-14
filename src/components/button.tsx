@@ -9,8 +9,9 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const buttonStyle = {
-  primary: 'btn btn-primary',
-  danger: 'btn btn-outline-danger',
+  primary:
+    'bg-[#0a2e52] hover:bg-[#1a4980] hover:shadow-[0_5px_15px_rgba(10,46,82,0.2)]',
+  danger: 'bg-red-600 hover:bg-red-700',
 }
 export default function Button({
   className,
@@ -21,7 +22,7 @@ export default function Button({
   return (
     <button
       {...props}
-      className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${buttonStyle[styleBtn]} ${className}`}
+      className={`w-full py-3.5 px-0 rounded text-base font-medium text-white border-none cursor-pointer transition-all duration-300 ${buttonStyle[styleBtn]} ${className}`}
     >
       {children}
     </button>

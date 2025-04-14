@@ -32,10 +32,13 @@ const Select: React.FC<SelectProps> = ({
   required,
 }) => {
   return (
-    <div className={`flex flex-col ${parentClass}`}>
+    <div className={`form-group ${parentClass}`}>
       {label && (
-        <label htmlFor={id} className='text-[12px]'>
-          {label} {required && <span className='text-red-500'>※</span>}
+        <label
+          htmlFor={id}
+          className='block mb-1.5 text-[#0a2e52] text-sm font-medium'
+        >
+          {label} {required && <span className='text-[#e74c3c]'>*</span>}
         </label>
       )}
       <div className='relative'>
@@ -43,11 +46,11 @@ const Select: React.FC<SelectProps> = ({
           id={id}
           value={value}
           name={name}
-          className={`mt-1 block w-full bg-white rounded-md border boder-2 px-2 py-1 border-gray-300 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${className}`}
+          className={`w-full px-4 py-3 border border-[#e0e0e0] rounded text-[15px] text-[#333] bg-white focus:border-[#0a2e52] focus:outline-none focus:shadow-[0_0_0_2px_rgba(10,46,82,0.1)] pr-10 bg-[url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")] bg-no-repeat bg-[right_15px_center] ${className}`}
           onChange={onchange}
         >
           {placeholder && (
-            <option className={'text-[#6b7280]'} value=''>
+            <option className='text-[#6b7280]' value=''>
               {placeholder}
             </option>
           )}
@@ -63,7 +66,7 @@ const Select: React.FC<SelectProps> = ({
         </select>
       </div>
       {error && (
-        <span className='text-red-500 text-[12px] text-sm'>{error}</span>
+        <span className='block mt-1 text-sm text-[#e74c3c]'>{error}</span>
       )}
     </div>
   )

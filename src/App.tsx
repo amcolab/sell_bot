@@ -13,12 +13,13 @@ import { schema } from './validate/form-validate'
 import Button from './components/button'
 import DefinedBenefit from './forms/defined-benefit'
 import InheritedAssets from './forms/inherited-assets'
-import Voucher from './forms/voucher'
+import { useDebounce } from 'use-debounce';
 
 function App() {
   const [userId, setUserId] = useState<string | null>(null)
   const [currentDate] = useState(new Date().toISOString().split('T')[0])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [price, setPrice] = useState<any>()
 
   const getSavedFormData = () => {
     const savedData = localStorage.getItem('formData')
@@ -67,20 +68,20 @@ function App() {
       referrerName: '',
       applicationType: '',
       numberOfSubsidiaries: '4', // Set default to 4
+      price: 0, // Add price to default values
       // Initialize with structured objects
       mainCompany: {
         industry: {
           category1: '',
           category2: '',
           category3: '',
-          classification: '',
         },
         financial: {
           profit: '',
           dividends: '',
         },
       },
-      subsidiaries: [], // Always initialize as an empty array
+      subsidiaries: [],
     }
   }
 
@@ -91,19 +92,17 @@ function App() {
     watch,
     setValue,
     getValues,
+    setError,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: getSavedFormData(),
-    mode: 'onChange', // Validate on change
-    reValidateMode: 'onChange', // Re-validate on change
+    mode: 'onChange',
+    reValidateMode: 'onChange',
   })
 
-  // Watch for changes in applicationType and numberOfSubsidiaries
   const applicationType = watch('applicationType')
   const numberOfSubsidiaries = watch('numberOfSubsidiaries')
-
-  // Add effect to clean up subsidiary data when numberOfSubsidiaries decreases
   useEffect(() => {
     if (applicationType === '子会社含む' && numberOfSubsidiaries) {
       const currentFormData = getValues()
@@ -128,15 +127,12 @@ function App() {
   const saveDataToLocalStorage = (fieldName: string, value: any) => {
     const currentFormData = getValues()
 
-    // Handle nested fields with dot notation (e.g., 'mainCompany.industry.category1')
     if (fieldName.includes('.')) {
       const parts = fieldName.split('.')
       let current = currentFormData
 
-      // Navigate to the nested object location
       for (let i = 0; i < parts.length - 1; i++) {
         if (!current[parts[i]]) {
-          // Đặc biệt xử lý cho subsidiaries để đảm bảo nó luôn là object
           if (parts[i] === 'subsidiaries') {
             current[parts[i]] = {}
           } else {
@@ -146,25 +142,20 @@ function App() {
         current = current[parts[i]]
       }
 
-      // Set the value at the final location
       current[parts[parts.length - 1]] = value
     } else {
-      // For top-level fields
       currentFormData[fieldName] = value
 
-      // Special handling for numberOfSubsidiaries
       if (
         fieldName === 'numberOfSubsidiaries' &&
         applicationType === '子会社含む'
       ) {
         const newCount = parseInt(value)
 
-        // If subsidiaries array exists and has more entries than the new count
         if (
           Array.isArray(currentFormData.subsidiaries) &&
           currentFormData.subsidiaries.length > newCount
         ) {
-          // Remove data for subsidiaries beyond the new count
           currentFormData.subsidiaries = currentFormData.subsidiaries.slice(
             0,
             newCount + 1
@@ -173,34 +164,27 @@ function App() {
       }
     }
 
-    // Save the entire form data to localStorage
     localStorage.setItem('formData', JSON.stringify(currentFormData))
   }
 
-  // Hàm tiện ích để đảm bảo cấu trúc dữ liệu đúng cho subsidiaries
-  // Utility function to ensure proper data structure for subsidiaries
   const ensureSubsidiaryStructure = (index: any) => {
     const currentFormData = getValues()
     const currentCount = parseInt(numberOfSubsidiaries || '0')
 
-    // Make sure subsidiaries is initialized as an array
     if (!Array.isArray(currentFormData.subsidiaries)) {
       currentFormData.subsidiaries = []
     }
 
-    // If the index is greater than the current count, don't create the structure
     if (index > currentCount) {
       return currentFormData
     }
 
-    // Ensure subsidiary[index] exists with proper structure
     if (!currentFormData.subsidiaries[index]) {
       currentFormData.subsidiaries[index] = {
         industry: {
           category1: '',
           category2: '',
           category3: '',
-          classification: '',
         },
         financial: {
           profit: '',
@@ -215,7 +199,6 @@ function App() {
         category1: '',
         category2: '',
         category3: '',
-        classification: '',
       }
     }
 
@@ -369,64 +352,99 @@ function App() {
       setIsSubmitting(false)
     }
   }
+  const handleFetchVoucher = async (voucher: string) => {
+    const apiUrl = `${import.meta.env.VITE_API_URL}?voucher=${encodeURIComponent(voucher)}`
+  
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+      },
+    })
+  
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+  
+    const result = await response.json()
+    setPrice(result.data)
+    return result
+  }
+  
+  const voucher = watch('voucher')
+  const [debouncedVoucher] = useDebounce(voucher, 800)
+  
+  useEffect(() => {
+    handleFetchVoucher(debouncedVoucher)
+  }, [debouncedVoucher])
+  
 
   return (
-    <div className='max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md'>
-      <h2 className='text-xl font-bold text-gray-800 mb-3 text-center'>
-        株価値ドック申し込みフォーム <br></br> 別添ロゴを入れる。
-      </h2>
+    <>
+    {price && <div className='min-h-screen bg-[#f5f5f5] flex justify-center items-center'>
+      <div className='w-full  bg-white rounded-lg overflow-hidden shadow-[0_10px_30px_rgba(0,0,20,0.1)]'>
+        <div className='bg-gradient-to-r from-[#0a2e52] to-[#1a4980] text-white p-5 text-center'>
+          <h1 className='text-xl font-semibold mb-1'>
+            株価値ドック申し込みフォーム
+          </h1>
+          <p className='text-sm opacity-90'>別添ロゴを入れる。</p>
+        </div>
 
-      <form onSubmit={handleSubmit(onSubmit, scrollToFirstError)}>
-        <InformationForm
-          control={control}
-          errors={errors}
-          saveDataToLocalStorage={saveDataToLocalStorage}
-        />
-        <ResultDeliveryMethod
-          control={control}
-          errors={errors}
-          saveDataToLocalStorage={saveDataToLocalStorage}
-        />
-        <RegistrationContent
-          control={control}
-          errors={errors}
-          saveDataToLocalStorage={saveDataToLocalStorage}
-          watch={watch}
-        />
-        <BusinessInformation
-          control={control}
-          errors={errors}
-          saveDataToLocalStorage={saveDataToLocalStorage}
-          watch={watch}
-          ensureSubsidiaryStructure={ensureSubsidiaryStructure}
-        />
-        <DefinedBenefit
-          control={control}
-          errors={errors}
-          saveDataToLocalStorage={saveDataToLocalStorage}
-          watch={watch}
-        />
-        <InheritedAssets
-          control={control}
-          errors={errors}
-          saveDataToLocalStorage={saveDataToLocalStorage}
-        />
-        <Voucher
-          control={control}
-          errors={errors}
-          saveDataToLocalStorage={saveDataToLocalStorage}
-        />
-        <Button
-          type='submit'
-          title='申し込む'
-          styleBtn='primary'
-          className='mt-3'
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? '送信中...' : '申し込む'}
-        </Button>
-      </form>
-    </div>
+        <div className='p-6'>
+          <form onSubmit={handleSubmit(onSubmit, scrollToFirstError)}>
+            <InformationForm
+              control={control}
+              errors={errors}
+              saveDataToLocalStorage={saveDataToLocalStorage}
+            />
+            <ResultDeliveryMethod
+              control={control}
+              errors={errors}
+              saveDataToLocalStorage={saveDataToLocalStorage}
+              setValue={setValue}
+              setError={setError}
+            />
+            <RegistrationContent
+              control={control}
+              errors={errors}
+              saveDataToLocalStorage={saveDataToLocalStorage}
+              watch={watch}
+              price= {price}
+              setValue = {setValue}
+            />
+            <BusinessInformation
+              control={control}
+              errors={errors}
+              saveDataToLocalStorage={saveDataToLocalStorage}
+              watch={watch}
+              ensureSubsidiaryStructure={ensureSubsidiaryStructure}
+              setValue= {setValue}
+            />
+            <DefinedBenefit
+              control={control}
+              errors={errors}
+              saveDataToLocalStorage={saveDataToLocalStorage}
+              watch={watch}
+            />
+            <InheritedAssets
+              control={control}
+              errors={errors}
+              saveDataToLocalStorage={saveDataToLocalStorage}
+            />
+            <Button
+              type='submit'
+              title='申し込む'
+              styleBtn='primary'
+              className='mt-2.5'
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? '送信中...' : '申し込む'}
+            </Button>
+          </form>
+        </div>
+      </div>
+    </div>}</>
+    
   )
 }
 
