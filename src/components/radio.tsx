@@ -13,6 +13,7 @@ interface RadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
   classNameLabel?: string
   title?: string
   required?: boolean
+  value?: any
 }
 
 export default function Radio({
@@ -28,6 +29,7 @@ export default function Radio({
   title,
   error,
   required,
+  value
 }: RadioProps) {
   return (
     <div className='form-group'>
@@ -51,6 +53,7 @@ export default function Radio({
             checked={checked}
             disabled={disabled}
             aria-invalid={!!error}
+            value={value}
           />
           {title && (
             <label htmlFor={id} className='text-sm cursor-pointer'>

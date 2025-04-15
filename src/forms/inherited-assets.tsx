@@ -2,6 +2,7 @@ import { Controller } from 'react-hook-form'
 import Input from '../components/input'
 import { formatNumber } from '../utils/utils'
 import Radio from '../components/radio'
+import HeaderSection from '../components/header-section'
 
 const InheritedAssets = ({ control, errors, saveDataToLocalStorage }: any) => {
   const handleBlur = (name: string, value: any) => {
@@ -9,15 +10,7 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage }: any) => {
   }
 
   return (
-    <div className="mt-2">
-      <div>
-        <h3 className="text-lg font-semibold mb-3">
-          <span className="inline-block w-8 h-8 leading-8 text-center text-white bg-[#0a2e52] rounded-full mr-2">
-            6
-          </span>
-          相続資産
-        </h3>
-      </div>
+    <HeaderSection title="相続資産" stepNumber={6}>
       <div className='mb-5'>
         <h3 className='text-lg font-semibold mb-3'>法定相続人確認</h3>
         <label className='block mb-1.5 text-[#0a2e52] text-sm font-medium'>
@@ -346,7 +339,7 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage }: any) => {
         />
       </div>
       <div className='h-px bg-[#eee] my-5'></div>
-    </div>
+    </HeaderSection>
   )
 }
 

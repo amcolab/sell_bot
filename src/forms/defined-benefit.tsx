@@ -1,6 +1,7 @@
 import { Controller } from 'react-hook-form'
 import Input from '../components/input'
 import { formatNumber } from '../utils/utils'
+import HeaderSection from '../components/header-section'
 
 const DefinedBenefit = ({ control, errors, saveDataToLocalStorage }: any) => {
   const handleBlur = (name: string, value: any) => {
@@ -8,15 +9,7 @@ const DefinedBenefit = ({ control, errors, saveDataToLocalStorage }: any) => {
   }
 
   return (
-    <div className="mt-2">
-      <div>
-        <h3 className="text-lg font-semibold mb-3">
-          <span className="inline-block w-8 h-8 leading-8 text-center text-white bg-[#0a2e52] rounded-full mr-2">
-            5
-          </span>
-          確定給付
-        </h3>
-      </div>
+    <HeaderSection title="確定給付" stepNumber={5}>
       <div className='mb-5'>
         <Controller
           name='currentSalary'
@@ -91,7 +84,7 @@ const DefinedBenefit = ({ control, errors, saveDataToLocalStorage }: any) => {
         <p className='text-sm text-gray-600 mt-1'>※1年以内切り上げ</p>
       </div>
       <div className='h-px bg-[#eee] my-5'></div>
-    </div>
+    </HeaderSection>
   )
 }
 

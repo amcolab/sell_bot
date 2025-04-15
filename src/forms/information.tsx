@@ -1,5 +1,6 @@
 import { Controller } from 'react-hook-form'
 import Input from '../components/input'
+import HeaderSection from '../components/header-section'
 
 export default function InformationForm({
   control,
@@ -12,15 +13,7 @@ export default function InformationForm({
   }
 
   return (
-    <div className="mt-2">
-      <div>
-        <h3 className="text-lg font-semibold mb-3">
-          <span className="inline-block w-8 h-8 leading-8 text-center text-white bg-[#0a2e52] rounded-full mr-2">
-            1
-          </span>
-          基本情報
-        </h3>
-      </div>
+    <HeaderSection title="基本情報" stepNumber={1}>
       <div className='mb-5'>
         <Controller
           name='registrationDate'
@@ -242,7 +235,6 @@ export default function InformationForm({
           )}
         />
       </div>
-      <div className='h-px bg-[#eee] my-5'></div>
-    </div>
+    </HeaderSection>
   )
 }

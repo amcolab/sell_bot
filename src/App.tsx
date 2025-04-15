@@ -93,6 +93,7 @@ function App() {
     setValue,
     getValues,
     setError,
+    trigger,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -101,6 +102,11 @@ function App() {
     reValidateMode: 'onChange',
   })
 
+  // Only trigger validation once on mount
+  useEffect(() => {
+    trigger()
+  }, []) // Empty dependency array to run only once on mount
+
   const applicationType = watch('applicationType')
   const numberOfSubsidiaries = watch('numberOfSubsidiaries')
   useEffect(() => {
@@ -108,19 +114,44 @@ function App() {
       const currentFormData = getValues()
       const currentCount = parseInt(numberOfSubsidiaries)
 
-      if (
-        Array.isArray(currentFormData.subsidiaries) &&
-        currentFormData.subsidiaries.length > currentCount
-      ) {
-        currentFormData.subsidiaries = currentFormData.subsidiaries.slice(
-          0,
-          currentCount + 1
-        )
-
-        localStorage.setItem('formData', JSON.stringify(currentFormData))
-
-        setValue('subsidiaries', currentFormData.subsidiaries)
+      if (!Array.isArray(currentFormData.subsidiaries)) {
+        currentFormData.subsidiaries = []
       }
+
+      if (currentFormData.subsidiaries.length > currentCount) {
+        // If reducing count, keep the first N subsidiaries
+        currentFormData.subsidiaries = currentFormData.subsidiaries.slice(0, currentCount)
+      } else if (currentFormData.subsidiaries.length < currentCount) {
+        // If increasing count, add new empty subsidiaries while preserving existing ones
+        const newSubsidiaries = Array(currentCount - currentFormData.subsidiaries.length)
+          .fill(null)
+          .map(() => ({
+            industry: {
+              category1: '',
+              category2: '',
+              category3: '',
+              specialCase: '',
+              revenuePercentage1: '',
+              revenuePercentage2: '',
+              revenuePercentage3: ''
+            },
+            financial: {
+              profit: '0',
+              dividends: '0'
+            }
+          }))
+        currentFormData.subsidiaries = [...currentFormData.subsidiaries, ...newSubsidiaries]
+      }
+
+      // Save to localStorage and update form state
+      localStorage.setItem('formData', JSON.stringify(currentFormData))
+      setValue('subsidiaries', currentFormData.subsidiaries)
+    } else if (applicationType === '主たる法人のみ') {
+      // Clear subsidiaries when switching to main company only
+      const currentFormData = getValues()
+      currentFormData.subsidiaries = []
+      localStorage.setItem('formData', JSON.stringify(currentFormData))
+      setValue('subsidiaries', [])
     }
   }, [applicationType, numberOfSubsidiaries, getValues, setValue])
 
@@ -261,7 +292,7 @@ function App() {
 
     // Load saved form data from localStorage when component mounts
     const savedData = getSavedFormData()
-
+   
     // Set values for all fields including nested ones
     const setNestedValues = (obj: any, prefix = '') => {
       Object.entries(obj).forEach(([key, value]) => {
@@ -277,7 +308,7 @@ function App() {
 
     setNestedValues(savedData)
   }, [setValue])
-
+  console.log(errors);
   const scrollToFirstError = () => {
     // First scroll to top of the form
     const formElement = document.querySelector('form')
@@ -390,7 +421,7 @@ function App() {
           <p className='text-sm opacity-90'>別添ロゴを入れる。</p>
         </div>
 
-        <div className='p-6'>
+        <div className='p-3'>
           <form onSubmit={handleSubmit(onSubmit, scrollToFirstError)}>
             <InformationForm
               control={control}
