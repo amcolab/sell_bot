@@ -32,7 +32,7 @@ export default function Input({
   required,
 }: InputProps) {
   return (
-    <div className='form-group w-full'>
+    <div className='form-group w-full relative'>
       {label && (
         <label
           htmlFor={id}

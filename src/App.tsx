@@ -102,6 +102,8 @@ function App() {
     reValidateMode: 'onChange',
   })
 
+  console.log(errors);
+  
   // Only trigger validation once on mount
   useEffect(() => {
     trigger()
@@ -434,6 +436,7 @@ function App() {
               saveDataToLocalStorage={saveDataToLocalStorage}
               setValue={setValue}
               setError={setError}
+              watch={watch}
             />
             <RegistrationContent
               control={control}
@@ -442,12 +445,12 @@ function App() {
               watch={watch}
               price= {price}
               setValue = {setValue}
+              getValues={getValues}
             />
             <BusinessInformation
               control={control}
               errors={errors}
               saveDataToLocalStorage={saveDataToLocalStorage}
-              watch={watch}
               ensureSubsidiaryStructure={ensureSubsidiaryStructure}
               setValue= {setValue}
             />
@@ -461,6 +464,7 @@ function App() {
               control={control}
               errors={errors}
               saveDataToLocalStorage={saveDataToLocalStorage}
+              watch={watch}
             />
             <Button
               type='submit'

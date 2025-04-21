@@ -35,7 +35,7 @@ export default function RegistrationContent({
   }
 
   return (
-    <HeaderSection title="申込内容" stepNumber={3}>
+    <HeaderSection title="申込内容＆申込金額" stepNumber={3}>
       <div className="mt-2">
         <div>
           <div className='mb-5'>

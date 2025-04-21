@@ -218,15 +218,34 @@ export default function InformationForm({
       </div>
       <div className='mb-5'>
         <Controller
+          name='address'
+          control={control}
+          render={({ field }) => (
+            <Input
+              label='住所'
+              id='address'
+              type='text'
+              name='address'
+              placeholder='住所を入力してください'
+              error={errors.address?.message}
+              onchange={field.onChange}
+              onblur={() => handleBlur('address', field.value)}
+              value={field.value}
+            />
+          )}
+        />
+      </div>
+      <div className='mb-5'>
+        <Controller
           name='voucher'
           control={control}
           render={({ field }) => (
             <Input
-              label='クーポン'
+              label='割引コード'
               id='voucher'
               type='text'
               name='voucher'
-              placeholder='クーポンを入力してください'
+              placeholder='割引コードを入力してください'
               error={errors.voucher?.message}
               onchange={field.onChange}
               onblur={() => handleBlur('voucher', field.value)}
