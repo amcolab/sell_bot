@@ -30,6 +30,8 @@ export default function InformationForm({
               onblur={() => handleBlur('registrationDate', field.value)}
               value={field.value}
               required={true}
+              disabled={true}
+              className='opacity-50'
             />
           )}
         />
