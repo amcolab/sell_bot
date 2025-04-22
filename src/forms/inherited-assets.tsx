@@ -4,7 +4,7 @@ import Radio from '../components/radio';
 import HeaderSection from '../components/header-section';
 import { formatNumber } from '../utils/utils';
 
-const InheritedAssets = ({ control, errors, saveDataToLocalStorage, watch }: any) => {
+const InheritedAssets = ({ control, errors, saveDataToLocalStorage, watch, setValue }: any) => {
   const maritalStatus = watch('maritalStatus');
   const numberOfChildrenWithSpouse = watch('numberOfChildrenWithSpouse') || '0';
   const numberOfOtherChildren = watch('numberOfOtherChildren') || '0';
@@ -13,6 +13,13 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage, watch }: any
 
   const handleBlur = (name: string, value: any) => {
     saveDataToLocalStorage(name, value);
+  };
+
+  const resetFields = (fields: string[]) => {
+    fields.forEach(field => {
+      setValue(field, '');
+      handleBlur(field, '');
+    });
   };
 
   return (
@@ -35,12 +42,19 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage, watch }: any
                   type="radio"
                   name="maritalStatus"
                   onChange={() => {
-                    field.onChange('あり');
-                    handleBlur('maritalStatus', 'あり');
+                    field.onChange('はい');
+                    handleBlur('maritalStatus', 'はい');
+                    // Reset spouse-related fields when changing marital status
+                    resetFields([
+                      'numberOfChildrenWithSpouse',
+                      'numberOfOtherChildren',
+                      'numberOfLivingParents',
+                      'numberOfLivingSiblings'
+                    ]);
                   }}
                   onBlur={field.onBlur}
-                  checked={field.value === 'あり'}
-                  title="あり"
+                  checked={field.value === 'はい'}
+                  title="はい"
                   required={true}
                 />
                 <Radio
@@ -48,12 +62,19 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage, watch }: any
                   type="radio"
                   name="maritalStatus"
                   onChange={() => {
-                    field.onChange('なし');
-                    handleBlur('maritalStatus', 'なし');
+                    field.onChange('いいえ');
+                    handleBlur('maritalStatus', 'いいえ');
+                    // Reset all spouse and children related fields
+                    resetFields([
+                      'numberOfChildrenWithSpouse',
+                      'numberOfOtherChildren',
+                      'numberOfLivingParents',
+                      'numberOfLivingSiblings'
+                    ]);
                   }}
                   onBlur={field.onBlur}
-                  checked={field.value === 'なし'}
-                  title="なし"
+                  checked={field.value === 'いいえ'}
+                  title="いいえ"
                 />
               </>
             )}
@@ -66,7 +87,7 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage, watch }: any
         )}
       </div>
 
-      {maritalStatus === 'あり' && (
+      {maritalStatus === 'はい' && (
         <>
           <div className="mb-5">
             <Controller
@@ -82,8 +103,13 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage, watch }: any
                   error={errors.numberOfChildrenWithSpouse?.message}
                   onchange={(e) => {
                     const value = e.target.value.replace(/[^\d]/g, '');
-                    field.onChange(value || '0');
-                    handleBlur('numberOfChildrenWithSpouse', value || '0');
+                    const cleanValue = value.replace(/^0+/, '') || '0';
+                    field.onChange(cleanValue);
+                    handleBlur('numberOfChildrenWithSpouse', cleanValue);
+                    // Reset parents and siblings fields when children count changes
+                    if (Number(cleanValue) > 0) {
+                      resetFields(['numberOfLivingParents', 'numberOfLivingSiblings']);
+                    }
                   }}
                   onblur={() => {
                     if (!field.value) {
@@ -110,8 +136,13 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage, watch }: any
                   error={errors.numberOfOtherChildren?.message}
                   onchange={(e) => {
                     const value = e.target.value.replace(/[^\d]/g, '');
-                    field.onChange(value || '0');
-                    handleBlur('numberOfOtherChildren', value || '0');
+                    const cleanValue = value.replace(/^0+/, '') || '0';
+                    field.onChange(cleanValue);
+                    handleBlur('numberOfOtherChildren', cleanValue);
+                    // Reset parents and siblings fields when children count changes
+                    if (Number(cleanValue) > 0) {
+                      resetFields(['numberOfLivingParents', 'numberOfLivingSiblings']);
+                    }
                   }}
                   onblur={() => {
                     if (!field.value) {
@@ -123,6 +154,7 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage, watch }: any
                 />
               )}
             />
+            <p className="text-sm text-gray-500 mt-1">※前婚など、現在の配偶者以外との間に生まれたお子様の人数</p>
           </div>
         </>
       )}
@@ -143,8 +175,9 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage, watch }: any
                   error={errors.numberOfLivingParents?.message}
                   onchange={(e) => {
                     const value = e.target.value.replace(/[^\d]/g, '');
-                    field.onChange(value || '0');
-                    handleBlur('numberOfLivingParents', value || '0');
+                    const cleanValue = value.replace(/^0+/, '') || '0';
+                    field.onChange(cleanValue);
+                    handleBlur('numberOfLivingParents', cleanValue);
                   }}
                   onblur={() => {
                     if (!field.value) {
@@ -171,8 +204,9 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage, watch }: any
                   error={errors.numberOfLivingSiblings?.message}
                   onchange={(e) => {
                     const value = e.target.value.replace(/[^\d]/g, '');
-                    field.onChange(value || '0');
-                    handleBlur('numberOfLivingSiblings', value || '0');
+                    const cleanValue = value.replace(/^0+/, '') || '0';
+                    field.onChange(cleanValue);
+                    handleBlur('numberOfLivingSiblings', cleanValue);
                   }}
                   onblur={() => {
                     if (!field.value) {
@@ -235,9 +269,9 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage, watch }: any
                 error={errors[fieldName]?.message}
                 onchange={(e) => {
                   const value = e.target.value.replace(/[^\d]/g, '');
-                  const formattedValue = value ? formatNumber(value.replace(/^0+/, '')) : '0';
-                  field.onChange(formattedValue);
-                  handleBlur(fieldName, formattedValue);
+                  const cleanValue = value.replace(/^0+/, '') || '0';
+                  field.onChange(cleanValue);
+                  handleBlur(fieldName, cleanValue);
                 }}
                 onblur={() => {
                   if (!field.value) {
@@ -284,6 +318,17 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage, watch }: any
                   onChange={() => {
                     field.onChange('いいえ');
                     handleBlur('includeSpouseAssets', 'いいえ');
+                    // Reset all spouse-related fields when selecting "no"
+                    resetFields([
+                      'spouseName',
+                      'spouseCashAndDeposits',
+                      'spouseRetirementBenefits',
+                      'spouseRealEstate',
+                      'spouseSecurities',
+                      'spouseAmountOfLifeInsurance',
+                      'spouseOtherAssets',
+                      'spouseDebts'
+                    ]);
                   }}
                   onBlur={field.onBlur}
                   checked={field.value === 'いいえ'}
@@ -321,6 +366,7 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage, watch }: any
                     handleBlur('spouseName', e.target.value);
                   }}
                   value={field.value || ''}
+                  required={true}
                 />
               )}
             />
@@ -349,9 +395,9 @@ const InheritedAssets = ({ control, errors, saveDataToLocalStorage, watch }: any
                     error={errors[fieldName]?.message}
                     onchange={(e) => {
                       const value = e.target.value.replace(/[^\d]/g, '');
-                      const formattedValue = value ? formatNumber(value.replace(/^0+/, '')) : '0';
-                      field.onChange(formattedValue);
-                      handleBlur(fieldName, formattedValue);
+                      const cleanValue = value.replace(/^0+/, '') || '0';
+                      field.onChange(cleanValue);
+                      handleBlur(fieldName, cleanValue);
                     }}
                     onblur={() => {
                       if (!field.value) {

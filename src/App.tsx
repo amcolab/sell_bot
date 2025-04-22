@@ -13,13 +13,18 @@ import { schema } from './validate/form-validate'
 import Button from './components/button'
 import DefinedBenefit from './forms/defined-benefit'
 import InheritedAssets from './forms/inherited-assets'
-import { useDebounce } from 'use-debounce';
+import { useDebounce } from 'use-debounce'
+import Preview from './components/preview'
 
 function App() {
   const [userId, setUserId] = useState<string | null>(null)
   const [currentDate] = useState(new Date().toISOString().split('T')[0])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [price, setPrice] = useState<any>()
+  const [showPreview, setShowPreview] = useState(false)
+  const [formData, setFormData] = useState<any>(null)
+  const [isSubmittingForm, setIsSubmittingForm] = useState(false)
 
   const getSavedFormData = () => {
     const savedData = localStorage.getItem('formData')
@@ -334,13 +339,27 @@ function App() {
   }
 
   const onSubmit = async (data: any) => {
+    if (isSubmittingForm) return;
+    setIsSubmittingForm(true);
+    try {
+      const dataWithUserId = {
+        ...data,
+        userId: userId,
+      }
+      setFormData(dataWithUserId)
+      setShowPreview(true)
+    } finally {
+      setIsSubmittingForm(false);
+    }
+  }
+
+  const handleConfirm = async () => {
+    if (isSubmitting) return;
     setIsSubmitting(true)
-    console.log('Form submitted with data:', data)
     const dataWithUserId = {
-      ...data,
+      ...formData,
       userId: userId,
     }
-    console.log(dataWithUserId)
 
     localStorage.setItem('formData', JSON.stringify(dataWithUserId))
 
@@ -385,23 +404,39 @@ function App() {
       setIsSubmitting(false)
     }
   }
+
+  const handleBack = () => {
+    setShowPreview(false)
+  }
+
   const handleFetchVoucher = async (voucher: string) => {
-    const apiUrl = `${import.meta.env.VITE_API_URL}?voucher=${encodeURIComponent(voucher)}`
-  
-    const response = await fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-      },
-    })
-  
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+    setIsLoading(true);
+    try {
+      const apiUrl = `${import.meta.env.VITE_API_URL}?voucher=${encodeURIComponent(voucher)}`
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+        },
+      })
+    
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+    
+      const result = await response.json()
+      setPrice(result.data)
+      return result
+    } catch (error) {
+      console.error('Error fetching voucher:', error)
+      toast.error('割引コードの確認に失敗しました', {
+        position: 'top-center',
+        className: 'custom-toast',
+        autoClose: 3000,
+      })
+    } finally {
+      setIsLoading(false)
     }
-  
-    const result = await response.json()
-    setPrice(result.data)
-    return result
   }
   
   const voucher = watch('voucher')
@@ -414,72 +449,85 @@ function App() {
 
   return (
     <>
-    {price && <div className='min-h-screen bg-[#f5f5f5] flex justify-center items-center'>
-      <div className='w-full  bg-white rounded-lg overflow-hidden shadow-[0_10px_30px_rgba(0,0,20,0.1)]'>
-        <div className='bg-gradient-to-r from-[#0a2e52] to-[#1a4980] text-white p-5 text-center'>
-          <h1 className='text-xl font-semibold mb-1'>
-            株価値ドック申し込みフォーム
-          </h1>
-          <p className='text-sm opacity-90'>別添ロゴを入れる。</p>
-        </div>
+      {price && (
+        <div className='min-h-screen bg-[#f5f5f5] flex justify-center items-center'>
+          <div className='w-full bg-white rounded-lg overflow-hidden shadow-[0_10px_30px_rgba(0,0,20,0.1)]'>
+            <div className='bg-gradient-to-r from-[#0a2e52] to-[#1a4980] text-white p-5 text-center'>
+              <h1 className='text-xl font-semibold mb-1'>
+                株価値ドック申し込みフォーム
+              </h1>
+              <p className='text-sm opacity-90'>別添ロゴを入れる。</p>
+            </div>
 
-        <div className='p-3'>
-          <form onSubmit={handleSubmit(onSubmit, scrollToFirstError)}>
-            <InformationForm
-              control={control}
-              errors={errors}
-              saveDataToLocalStorage={saveDataToLocalStorage}
-            />
-            <ResultDeliveryMethod
-              control={control}
-              errors={errors}
-              saveDataToLocalStorage={saveDataToLocalStorage}
-              setValue={setValue}
-              setError={setError}
-              watch={watch}
-            />
-            <RegistrationContent
-              control={control}
-              errors={errors}
-              saveDataToLocalStorage={saveDataToLocalStorage}
-              watch={watch}
-              price= {price}
-              setValue = {setValue}
-              getValues={getValues}
-            />
-            <BusinessInformation
-              control={control}
-              errors={errors}
-              saveDataToLocalStorage={saveDataToLocalStorage}
-              ensureSubsidiaryStructure={ensureSubsidiaryStructure}
-              setValue= {setValue}
-            />
-            <DefinedBenefit
-              control={control}
-              errors={errors}
-              saveDataToLocalStorage={saveDataToLocalStorage}
-              watch={watch}
-            />
-            <InheritedAssets
-              control={control}
-              errors={errors}
-              saveDataToLocalStorage={saveDataToLocalStorage}
-              watch={watch}
-            />
-            <Button
-              type='submit'
-              title='申し込む'
-              styleBtn='primary'
-              className='mt-2.5'
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? '送信中...' : '申し込む'}
-            </Button>
-          </form>
+            <div className='p-3'>
+              {showPreview ? (
+                <Preview
+                  data={formData}
+                  userId={userId}
+                  onConfirm={handleConfirm}
+                  onBack={handleBack}
+                  isSubmitting={isSubmitting}
+                />
+              ) : (
+                <form onSubmit={handleSubmit(onSubmit, scrollToFirstError)}>
+                  <InformationForm
+                    control={control}
+                    errors={errors}
+                    saveDataToLocalStorage={saveDataToLocalStorage}
+                  />
+                  <ResultDeliveryMethod
+                    control={control}
+                    errors={errors}
+                    saveDataToLocalStorage={saveDataToLocalStorage}
+                    setValue={setValue}
+                    setError={setError}
+                    watch={watch}
+                  />
+                  <RegistrationContent
+                    control={control}
+                    errors={errors}
+                    saveDataToLocalStorage={saveDataToLocalStorage}
+                    watch={watch}
+                    price={price}
+                    setValue={setValue}
+                    getValues={getValues}
+                  />
+                  <BusinessInformation
+                    control={control}
+                    errors={errors}
+                    saveDataToLocalStorage={saveDataToLocalStorage}
+                    ensureSubsidiaryStructure={ensureSubsidiaryStructure}
+                    setValue={setValue}
+                  />
+                  <DefinedBenefit
+                    control={control}
+                    errors={errors}
+                    saveDataToLocalStorage={saveDataToLocalStorage}
+                    watch={watch}
+                  />
+                  <InheritedAssets
+                    control={control}
+                    errors={errors}
+                    saveDataToLocalStorage={saveDataToLocalStorage}
+                    watch={watch}
+                    setValue={setValue}
+                  />
+                  <Button
+                    type='submit'
+                    title='確認画面へ'
+                    styleBtn='primary'
+                    className='mt-2.5'
+                    disabled={isSubmittingForm || isLoading}
+                  >
+                    {isSubmittingForm ? '送信中...' : '確認画面へ'}
+                  </Button>
+                </form>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>}</>
-    
+      )}
+    </>
   )
 }
 

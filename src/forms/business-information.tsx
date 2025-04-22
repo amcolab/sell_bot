@@ -1,5 +1,5 @@
-import { Controller, useFieldArray, useWatch } from 'react-hook-form';
-import { useEffect, useState, useCallback } from 'react';
+import { Controller, useFieldArray, useWatch, Control, FieldErrors, UseFormSetValue } from 'react-hook-form';
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import Input from '../components/input';
 import Select from '../components/select';
 import { formatNumber } from '../utils/utils';
@@ -11,6 +11,7 @@ import {
 } from '../utils/industryUtils';
 import Radio from '../components/radio';
 import HeaderSection from '../components/header-section';
+import isEqual from 'lodash/isEqual';
 
 // TypeScript interfaces for type safety
 interface Industry {
@@ -48,11 +49,11 @@ interface FormValues {
 }
 
 interface BusinessInformationProps {
-  control: any; // Replace with Control<FormValues> if using TypeScript
-  errors: any; // Replace with FieldErrors<FormValues>
+  control: any;
+  errors: FieldErrors<FormValues>;
   saveDataToLocalStorage: (key: string, value: string) => void;
   ensureSubsidiaryStructure: (index: number) => void;
-  setValue: (name: string, value: any, options?: any) => void; // Replace with UseFormSetValue<FormValues>
+  setValue: UseFormSetValue<FormValues>;
 }
 
 const BusinessInformation = ({
@@ -120,48 +121,129 @@ const BusinessInformation = ({
     { value: '', label: '選択してください' },
   ]);
 
-  const [subsidiaryIndustries, setSubsidiaryIndustries] = useState(
-    Array(subsidiariesCount).fill({
-      secondLevel: [{ value: '', label: '選択してください' }],
-      thirdLevel: [{ value: '', label: '選択してください' }],
-      secondLevel_2: [{ value: '', label: '選択してください' }],
-      thirdLevel_2: [{ value: '', label: '選択してください' }],
-      secondLevel_3: [{ value: '', label: '選択してください' }],
-      thirdLevel_3: [{ value: '', label: '選択してください' }],
-    })
+  // Memoize initial subsidiaryIndustries
+  const initialSubsidiaryIndustries = useMemo(
+    () =>
+      Array(subsidiariesCount).fill({
+        secondLevel: [{ value: '', label: '選択してください' }],
+        thirdLevel: [{ value: '', label: '選択してください' }],
+        secondLevel_2: [{ value: '', label: '選択してください' }],
+        thirdLevel_2: [{ value: '', label: '選択してください' }],
+        secondLevel_3: [{ value: '', label: '選択してください' }],
+        thirdLevel_3: [{ value: '', label: '選択してください' }],
+      }),
+    [subsidiariesCount]
   );
+
+  const [subsidiaryIndustries, setSubsidiaryIndustries] = useState(initialSubsidiaryIndustries);
+
+  // Add a ref to track previous subsidiaries count
+  const prevSubsidiariesCountRef = useRef(subsidiariesCount);
+
+  useEffect(() => {
+    // Only run if subsidiaries count has changed
+    if (applicationType === '子会社含む' && subsidiariesCount > 0 && prevSubsidiariesCountRef.current !== subsidiariesCount) {
+      const currentFields = fields;
+      const newFields = Array(subsidiariesCount)
+        .fill(null)
+        .map((_, index) => {
+          // If we have existing data for this index, use it
+          if (currentFields[index]) {
+            return currentFields[index];
+          }
+          // Otherwise create new empty fields
+          return {
+            industry: {
+              category1: '',
+              category2: '',
+              category3: '',
+              specialCase: '',
+              revenuePercentage1: '',
+              revenuePercentage2: '',
+              revenuePercentage3: '',
+              category2_2: '',
+              category3_2: '',
+              category2_3: '',
+              category3_3: '',
+            },
+            financial: {
+              profit: '0',
+              dividends: '0',
+            },
+          };
+        }) as Subsidiary[];
+      replace(newFields);
+      prevSubsidiariesCountRef.current = subsidiariesCount;
+    } else if (applicationType !== '子会社含む') {
+      replace([]);
+      prevSubsidiariesCountRef.current = 0;
+    }
+  }, [applicationType, subsidiariesCount, replace]);
 
   // Update second level industries for main company
   useEffect(() => {
     if (mainCompanyIndustry.category1) {
-      const children = getChildIndustries(mainCompanyIndustry.category1);
-      setSecondLevelIndustries(convertToSelectOptions(children));
+      const parentId = parseInt(mainCompanyIndustry.category1);
+      const children = getChildIndustries(parentId);
+      const newOptions = convertToSelectOptions(children);
+      setSecondLevelIndustries((prev) => {
+        if (!isEqual(prev, newOptions)) {
+          return newOptions;
+        }
+        return prev;
+      });
     } else {
-      setSecondLevelIndustries([{ value: '', label: '選択してください' }]);
-      setValue('mainCompany.industry.category2', '', { shouldValidate: false });
-      setValue('mainCompany.industry.category3', '', { shouldValidate: false });
-      memoizedSaveDataToLocalStorage('mainCompany.industry.category2', '');
-      memoizedSaveDataToLocalStorage('mainCompany.industry.category3', '');
+      setSecondLevelIndustries((prev) => {
+        const defaultOption = [{ value: '', label: '選択してください' }];
+        if (!isEqual(prev, defaultOption)) {
+          return defaultOption;
+        }
+        return prev;
+      });
+      if (mainCompanyIndustry.category2 !== '') {
+        setValue('mainCompany.industry.category2', '', { shouldValidate: false });
+        memoizedSaveDataToLocalStorage('mainCompany.industry.category2', '');
+      }
+      if (mainCompanyIndustry.category3 !== '') {
+        setValue('mainCompany.industry.category3', '', { shouldValidate: false });
+        memoizedSaveDataToLocalStorage('mainCompany.industry.category3', '');
+      }
     }
-  }, [mainCompanyIndustry.category1, setValue, memoizedSaveDataToLocalStorage]);
+  }, [mainCompanyIndustry.category1, mainCompanyIndustry.category2, mainCompanyIndustry.category3, setValue, memoizedSaveDataToLocalStorage]);
 
   // Update third level industries for main company
   useEffect(() => {
     if (mainCompanyIndustry.category2) {
-      const children = getChildIndustries(mainCompanyIndustry.category2);
-      setThirdLevelIndustries(convertToSelectOptions(children));
+      const parentId = parseInt(mainCompanyIndustry.category2);
+      const children = getChildIndustries(parentId);
+      const newOptions = convertToSelectOptions(children);
+      setThirdLevelIndustries((prev) => {
+        if (!isEqual(prev, newOptions)) {
+          return newOptions;
+        }
+        return prev;
+      });
     } else {
-      setThirdLevelIndustries([{ value: '', label: '選択してください' }]);
-      setValue('mainCompany.industry.category3', '', { shouldValidate: false });
-      memoizedSaveDataToLocalStorage('mainCompany.industry.category3', '');
+      setThirdLevelIndustries((prev) => {
+        const defaultOption = [{ value: '', label: '選択してください' }];
+        if (!isEqual(prev, defaultOption)) {
+          return defaultOption;
+        }
+        return prev;
+      });
+      if (mainCompanyIndustry.category3 !== '') {
+        setValue('mainCompany.industry.category3', '', { shouldValidate: false });
+        memoizedSaveDataToLocalStorage('mainCompany.industry.category3', '');
+      }
     }
-  }, [mainCompanyIndustry.category2, setValue, memoizedSaveDataToLocalStorage]);
+  }, [mainCompanyIndustry.category2, mainCompanyIndustry.category3, setValue, memoizedSaveDataToLocalStorage]);
 
   // Handle revenuePercentage3 reset for main company
   useEffect(() => {
     const rev1 = parseInt(mainCompanyIndustry.revenuePercentage1 || '0');
     const rev2 = parseInt(mainCompanyIndustry.revenuePercentage2 || '0');
-    if (rev1 + rev2 < 50 && !mainCompanyIndustry.revenuePercentage3) {
+    const rev3 = mainCompanyIndustry.revenuePercentage3;
+    if (rev1 + rev2 >= 50 && rev3 !== '') {
       setValue('mainCompany.industry.revenuePercentage3', '', { shouldValidate: false });
       memoizedSaveDataToLocalStorage('mainCompany.industry.revenuePercentage3', '');
     }
@@ -173,67 +255,38 @@ const BusinessInformation = ({
     memoizedSaveDataToLocalStorage,
   ]);
 
-  // Handle subsidiary count change
-  useEffect(() => {
-    if (applicationType === '子会社含む' && subsidiariesCount > 0) {
-      const newFields = Array(subsidiariesCount)
-        .fill(null)
-        .map(() => ({
-          industry: {
-            category1: '',
-            category2: '',
-            category3: '',
-            specialCase: '',
-            revenuePercentage1: '',
-            revenuePercentage2: '',
-            revenuePercentage3: '',
-            category2_2: '',
-            category3_2: '',
-            category2_3: '',
-            category3_3: '',
-          },
-          financial: {
-            profit: '0',
-            dividends: '0',
-          },
-        }));
-      replace(newFields);
-    } else {
-      replace([]);
-    }
-  }, [applicationType, subsidiariesCount, replace]);
-
   // Update subsidiary industry options
   useEffect(() => {
     const newSubsidiaryIndustries = subsidiaries.map((_: any, index: number) => {
-      const selectedCategory1 = subsidiaries[index]?.industry?.category1 || '';
-      const selectedCategory2 = subsidiaries[index]?.industry?.category2 || '';
-      const selectedCategory2_2 = subsidiaries[index]?.industry?.category2_2 || '';
-      const selectedCategory2_3 = subsidiaries[index]?.industry?.category2_3 || '';
-
       return {
-        secondLevel: selectedCategory1
-          ? convertToSelectOptions(getChildIndustries(selectedCategory1))
+        secondLevel: mainCompanyIndustry.category1
+          ? convertToSelectOptions(getChildIndustries(mainCompanyIndustry.category1))
           : [{ value: '', label: '選択してください' }],
-        thirdLevel: selectedCategory2
-          ? convertToSelectOptions(getChildIndustries(selectedCategory2))
+        thirdLevel: mainCompanyIndustry.category2
+          ? convertToSelectOptions(getChildIndustries(mainCompanyIndustry.category2))
           : [{ value: '', label: '選択してください' }],
-        secondLevel_2: selectedCategory1
-          ? convertToSelectOptions(getChildIndustries(selectedCategory1))
+        secondLevel_2: mainCompanyIndustry.category1
+          ? convertToSelectOptions(getChildIndustries(mainCompanyIndustry.category1))
           : [{ value: '', label: '選択してください' }],
-        thirdLevel_2: selectedCategory2_2
-          ? convertToSelectOptions(getChildIndustries(selectedCategory2_2))
+        thirdLevel_2: mainCompanyIndustry.category2_2
+          ? convertToSelectOptions(getChildIndustries(mainCompanyIndustry.category2_2))
           : [{ value: '', label: '選択してください' }],
-        secondLevel_3: selectedCategory1
-          ? convertToSelectOptions(getChildIndustries(selectedCategory1))
+        secondLevel_3: mainCompanyIndustry.category1
+          ? convertToSelectOptions(getChildIndustries(mainCompanyIndustry.category1))
           : [{ value: '', label: '選択してください' }],
-        thirdLevel_3: selectedCategory2_3
-          ? convertToSelectOptions(getChildIndustries(selectedCategory2_3))
+        thirdLevel_3: mainCompanyIndustry.category2_3
+          ? convertToSelectOptions(getChildIndustries(mainCompanyIndustry.category2_3))
           : [{ value: '', label: '選択してください' }],
       };
     });
-    setSubsidiaryIndustries(newSubsidiaryIndustries);
-  }, [subsidiaries]);
+
+    setSubsidiaryIndustries((prev) => {
+      if (!isEqual(prev, newSubsidiaryIndustries)) {
+        return newSubsidiaryIndustries;
+      }
+      return prev;
+    });
+  }, [subsidiaries, mainCompanyIndustry]);
 
   // Centralized reset logic for subsidiaries
   useEffect(() => {
@@ -241,12 +294,17 @@ const BusinessInformation = ({
       const rev1 = parseInt(subsidiaries[index]?.industry?.revenuePercentage1 || '0');
       const rev2 = parseInt(subsidiaries[index]?.industry?.revenuePercentage2 || '0');
       const rev3 = subsidiaries[index]?.industry?.revenuePercentage3;
-      if (rev1 + rev2 < 50 && !rev3) {
+      if (rev1 + rev2 >= 50 && rev3 !== '') {
         setValue(`subsidiaries.${index}.industry.revenuePercentage3`, '', { shouldValidate: false });
         memoizedSaveDataToLocalStorage(`subsidiaries.${index}.industry.revenuePercentage3`, '');
       }
     });
-  }, [subsidiaries, setValue, memoizedSaveDataToLocalStorage]);
+  }, [
+    subsidiaries.map((sub: any) => sub?.industry?.revenuePercentage1).join(),
+    subsidiaries.map((sub: any) => sub?.industry?.revenuePercentage2).join(),
+    setValue,
+    memoizedSaveDataToLocalStorage,
+  ]);
 
   return (
     <HeaderSection title="会社情報" stepNumber={4}>
@@ -489,8 +547,8 @@ const BusinessInformation = ({
 
             {mainCompanyIndustry.revenuePercentage1 &&
               mainCompanyIndustry.revenuePercentage2 &&
-              parseInt(mainCompanyIndustry.revenuePercentage1 || '0') +
-                parseInt(mainCompanyIndustry.revenuePercentage2 || '0') <
+              parseInt(mainCompanyIndustry.revenuePercentage1) +
+                parseInt(mainCompanyIndustry.revenuePercentage2) <
                 50 && (
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -661,84 +719,9 @@ const BusinessInformation = ({
           {fields.map((field, index) => (
             <div key={field.id} className="mt-2">
               <h3 className="text-lg font-semibold mb-3">子会社 {index + 1} 情報</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <Controller
-                  name={`subsidiaries.${index}.industry.category1`}
-                  control={control}
-                  render={({ field }) => (
-                    <div>
-                      <Select
-                        name={field.name}
-                        id={field.name}
-                        label="業種目大分類"
-                        required={true}
-                        value={field.value}
-                        error={errors.subsidiaries?.[index]?.industry?.category1?.message}
-                        options={topLevelIndustries}
-                        onchange={(e) => {
-                          field.onChange(e.target.value);
-                          ensureSubsidiaryStructure(index);
-                          memoizedSaveDataToLocalStorage(`subsidiaries.${index}.industry.category1`, e.target.value);
-                        }}
-                      />
-                    </div>
-                  )}
-                />
-
-                {subsidiaries[index]?.industry?.category1 && hasChildren(subsidiaries[index]?.industry?.category1) && (
-                  <Controller
-                    name={`subsidiaries.${index}.industry.category2`}
-                    control={control}
-                    render={({ field }) => (
-                      <div>
-                        <Select
-                          name={field.name}
-                          id={field.name}
-                          label="業種目中分類"
-                          required={true}
-                          value={field.value}
-                          error={errors.subsidiaries?.[index]?.industry?.category2?.message}
-                          options={subsidiaryIndustries[index]?.secondLevel || [{ value: '', label: '選択してください' }]}
-                          onchange={(e) => {
-                            field.onChange(e.target.value);
-                            ensureSubsidiaryStructure(index);
-                            memoizedSaveDataToLocalStorage(`subsidiaries.${index}.industry.category2`, e.target.value);
-                          }}
-                        />
-                      </div>
-                    )}
-                  />
-                )}
-
-                {subsidiaries[index]?.industry?.category2 && hasChildren(subsidiaries[index]?.industry?.category2) && (
-                  <Controller
-                    name={`subsidiaries.${index}.industry.category3`}
-                    control={control}
-                    render={({ field }) => (
-                      <div>
-                        <Select
-                          name={field.name}
-                          id={field.name}
-                          label="業種目小分類"
-                          required={true}
-                          value={field.value}
-                          error={errors.subsidiaries?.[index]?.industry?.category3?.message}
-                          options={subsidiaryIndustries[index]?.thirdLevel || [{ value: '', label: '選択してください' }]}
-                          onchange={(e) => {
-                            field.onChange(e.target.value);
-                            ensureSubsidiaryStructure(index);
-                            memoizedSaveDataToLocalStorage(`subsidiaries.${index}.industry.category3`, e.target.value);
-                          }}
-                        />
-                      </div>
-                    )}
-                  />
-                )}
-              </div>
-
               <div className="grid grid-cols-1 gap-4 mb-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">業種区分特例</label>
+                  <label htmlFor={`subsidiaries.${index}.industry.specialCase`} className="block text-sm font-medium text-gray-700 mb-2">業種区分特例</label>
                   <div className="space-y-2">
                     <Controller
                       name={`subsidiaries.${index}.industry.specialCase`}
@@ -914,8 +897,8 @@ const BusinessInformation = ({
 
                     {subsidiaries[index]?.industry?.revenuePercentage1 &&
                       subsidiaries[index]?.industry?.revenuePercentage2 &&
-                      parseInt(subsidiaries[index]?.industry?.revenuePercentage1 || '0') +
-                        parseInt(subsidiaries[index]?.industry?.revenuePercentage2 || '0') <
+                      parseInt(subsidiaries[index]?.industry?.revenuePercentage1) +
+                        parseInt(subsidiaries[index]?.industry?.revenuePercentage2) <
                         50 && (
                         <div className="space-y-4">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

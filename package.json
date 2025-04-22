@@ -10,6 +10,7 @@
     "@hookform/resolvers": "^5.0.1",
     "@line/liff": "2.25.1",
     "japan-postal-code": "^0.3.0",
+    "lodash": "^4.17.21",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.55.0",
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "@types/japan-postal-code": "^0.2.4",
+    "@types/lodash": "^4.17.16",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
     "@vitejs/plugin-react": "4.3.4",
