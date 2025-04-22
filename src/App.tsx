@@ -15,6 +15,8 @@ import DefinedBenefit from './forms/defined-benefit'
 import InheritedAssets from './forms/inherited-assets'
 import { useDebounce } from 'use-debounce'
 import Preview from './components/preview'
+import Logo from './assets/logo/logo.png'
+import { getIndustryById } from './utils/industryUtils'
 
 function App() {
   const [userId, setUserId] = useState<string | null>(null)
@@ -98,7 +100,6 @@ function App() {
     setValue,
     getValues,
     setError,
-    trigger,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -106,13 +107,6 @@ function App() {
     mode: 'onChange',
     reValidateMode: 'onChange',
   })
-
-  console.log(errors);
-  
-  // Only trigger validation once on mount
-  useEffect(() => {
-    trigger()
-  }, []) // Empty dependency array to run only once on mount
 
   const applicationType = watch('applicationType')
   const numberOfSubsidiaries = watch('numberOfSubsidiaries')
@@ -355,55 +349,91 @@ function App() {
 
   const handleConfirm = async () => {
     if (isSubmitting) return;
-    setIsSubmitting(true)
-    const dataWithUserId = {
+    setIsSubmitting(true);
+  
+    // Helper function to transform industry fields
+    const transformIndustry = (industry: any) => {
+      const fields = [
+        'category1',
+        'category2',
+        'category3',
+        'category1_2',
+        'category2_2',
+        'category3_2',
+        'category1_3',
+        'category2_3',
+        'category3_3',
+      ];
+  
+      const transformed = { ...industry };
+      fields.forEach((field) => {
+        const value = industry[field];
+        if (value && !isNaN(Number(value))) {
+          const industryData = getIndustryById(Number(value));
+          transformed[field] = industryData && industryData.value ? industryData.value : '';
+        } else {
+          transformed[field] = value || '';
+        }
+      });
+      return transformed;
+    };
+  
+    // Transform formData
+    const transformedData = {
       ...formData,
       userId: userId,
-    }
-
-    localStorage.setItem('formData', JSON.stringify(dataWithUserId))
-
+      mainCompany: {
+        ...formData.mainCompany,
+        industry: transformIndustry(formData.mainCompany.industry),
+      },
+      subsidiaries: formData.subsidiaries.map((subsidiary: any) => ({
+        ...subsidiary,
+        industry: transformIndustry(subsidiary.industry),
+      })),
+    };
+  
     try {
+      console.log(transformedData);
       const response = await fetch(import.meta.env.VITE_API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'text/plain; charset=utf-8',
         },
-        body: JSON.stringify(dataWithUserId),
-      })
-
+        body: JSON.stringify(transformedData),
+      });
+  
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-
-      const result = await response.json()
+  
+      const result = await response.json();
       if (result.code === 200) {
         toast.success(result.message, {
           position: 'top-center',
           className: 'custom-toast',
           autoClose: 3000,
-        })
+        });
         if (result.paymentLink) {
-          window.location.href = result.paymentLink
+          window.location.href = result.paymentLink;
         }
       } else {
         toast.error(result.message, {
           position: 'top-center',
           className: 'custom-toast',
           autoClose: 3000,
-        })
+        });
       }
     } catch (error) {
-      console.error('API Error:', error)
+      console.error('API Error:', error);
       toast.error('データの送信に失敗しました', {
         position: 'top-center',
         className: 'custom-toast',
         autoClose: 3000,
-      })
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleBack = () => {
     setShowPreview(false)
@@ -429,11 +459,6 @@ function App() {
       return result
     } catch (error) {
       console.error('Error fetching voucher:', error)
-      toast.error('割引コードの確認に失敗しました', {
-        position: 'top-center',
-        className: 'custom-toast',
-        autoClose: 3000,
-      })
     } finally {
       setIsLoading(false)
     }
@@ -456,7 +481,11 @@ function App() {
               <h1 className='text-xl font-semibold mb-1'>
                 株価値ドック申し込みフォーム
               </h1>
-              <p className='text-sm opacity-90'>別添ロゴを入れる。</p>
+              <div className='flex justify-center w-full'>
+                <div className='bg-white w-[210px] h-[50px] px-5 py-2'>
+                  <img src={Logo} alt='logo' className='w-full h-full object-contain' />
+                </div>
+              </div>
             </div>
 
             <div className='p-3'>
@@ -474,6 +503,8 @@ function App() {
                     control={control}
                     errors={errors}
                     saveDataToLocalStorage={saveDataToLocalStorage}
+                    setValue={setValue}
+                    setError={setError}
                   />
                   <ResultDeliveryMethod
                     control={control}

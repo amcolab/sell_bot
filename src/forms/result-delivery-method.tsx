@@ -19,12 +19,12 @@ export default function ResultDeliveryMethod({
     saveDataToLocalStorage(name, value);
   };
 
-  const [postalCode, setPostalCode] = useState('');
+  const [postalCodeReceiver, setpostalCodeReceiver] = useState('');
   const handleLookup = async () => {
-    if (!postalCode) return;
+    if (!postalCodeReceiver) return;
 
     try {
-      await get(postalCode, (address: any) => {
+      await get(postalCodeReceiver, (address: any) => {
         console.log(address);
 
         const formattedAddress = `${address.prefecture}${address.city}${address.area}${address.street}`;
@@ -41,7 +41,6 @@ export default function ResultDeliveryMethod({
     if (reportReceiving !== '紹介者経由') {
       setError('referrerName', { type: null, message: null });
       setError('referrerCompanyName', { type: null, message: null });
-      setError('referrerAddress', { type: null, message: null });
       setError('referrerEmail', { type: null, message: null });
     }
   }, [reportReceiving, setError]);
@@ -98,22 +97,22 @@ export default function ResultDeliveryMethod({
 
         <div className="mb-5">
           <Controller
-            name="postalCode"
+            name="postalCodeReceiver"
             control={control}
             render={({ field }) => (
               <Input
                 label="郵便番号"
-                id="postalCode"
+                id="postalCodeReceiver"
                 type="text"
-                name="postalCode"
+                name="postalCodeReceiver"
                 placeholder="郵便番号を入力してください"
-                error={errors.postalCode?.message}
+                error={errors.postalCodeReceiver?.message}
                 onchange={(e) => {
                   field.onChange(e);
-                  setPostalCode(e.target.value);
+                  setpostalCodeReceiver(e.target.value);
                 }}
                 onblur={() => {
-                  handleBlur('postalCode', field.value);
+                  handleBlur('postalCodeReceiver', field.value);
                   handleLookup();
                 }}
                 value={field.value}
@@ -128,11 +127,11 @@ export default function ResultDeliveryMethod({
             control={control}
             render={({ field }) => (
               <Input
-                label="郵送先（紹介者経由でない場合）"
+                label="郵送先住所"
                 id="receiverAddress"
                 type="text"
                 name="receiverAddress"
-                placeholder="郵送先を入力してください"
+                placeholder="郵送先住所を入力してください"
                 error={errors.receiverAddress?.message}
                 onchange={field.onChange}
                 onblur={() => handleBlur('receiverAddress', field.value)}
@@ -142,7 +141,7 @@ export default function ResultDeliveryMethod({
             )}
           />
         </div>
-        <div className="mb-5">
+        {reportReceiving === '紹介者経由' && <><div className="mb-5">
           <label className="block mb-1.5 text-[#0a2e52] text-sm font-medium">
             ご紹介者
           </label>
@@ -206,27 +205,8 @@ export default function ResultDeliveryMethod({
               />
             )}
           />
-        </div>
-        <div className="mb-5">
-          <Controller
-            name="referrerAddress"
-            control={control}
-            render={({ field }) => (
-              <Input
-                label="住所"
-                id="referrerAddress"
-                type="text"
-                name="referrerAddress"
-                placeholder="住所を入力してください"
-                error={errors.referrerAddress?.message}
-                onchange={field.onChange}
-                onblur={() => handleBlur('referrerAddress', field.value)}
-                value={field.value}
-              />
-            )}
-          />
-        </div>
-
+        </div></>}
+        
         <div className="h-px bg-[#eee] my-5"></div>
       </div>
     </HeaderSection>
