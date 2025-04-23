@@ -193,8 +193,16 @@ export const schema = yup.object().shape({
   postalCode: yup.string().required('郵便番号は必須です'),
   address: yup.string().required('住所は必須です'),
   reportReceiving: yup.string().required('レポート受信方法は必須です'),
-  postalCodeReceiver: yup.string().required('郵便番号は必須です'),
-  receiverAddress: yup.string().required('レポート送付先住所は必須です'),
+  postalCodeReceiver: yup.string().when('reportReceiving', {
+    is: '紹介者経由',
+    then: (schema) => schema.required('郵便番号は必須です'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  receiverAddress: yup.string().when('reportReceiving', {
+    is: '紹介者経由',
+    then: (schema) => schema.required('レポート送付先住所は必須です'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
   referrerName: yup.string().when('reportReceiving', {
     is: '紹介者経由',
     then: (schema) => schema.required('紹介者名を入力してください').min(1, '紹介者名は空にできません'),
@@ -235,7 +243,7 @@ export const schema = yup.object().shape({
   .test('is-valid-yen', '有効な金額を入力してください', (value) => {
     if (!value) return true;
     const numValue = Number(value);
-    return !isNaN(numValue) && numValue >= 0 && numValue <= 999999999999;
+    return !isNaN(numValue) && numValue > 0 && numValue <= 999999999999;
   })
   .required('現在の給与は必須です'),
   numberOfYears: yup

@@ -384,6 +384,25 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
           </div>
         )}
 
+      <div className="bg-white p-6 rounded-lg shadow">
+        <h2 className="text-xl font-bold mb-4">役員退職金</h2>
+        <div className="space-y-4">
+          <div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-gray-600">現在の月額役員報酬</p>
+                <p className="font-medium">{formatCurrency(transformedData.currentSalary)}</p>
+              </div>
+              <div>
+                <p className="text-gray-600">取締役勤続年数</p>
+                <p className="font-medium">{transformedData.numberOfYears}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Inheritance Information */}
       <div className="bg-white p-6 rounded-lg shadow">
         <h2 className="text-xl font-bold mb-4">相続情報</h2>
