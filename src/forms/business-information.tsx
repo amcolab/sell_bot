@@ -509,7 +509,7 @@ const BusinessInformation = ({
       {/* Main Company Special Case and Revenue Percentages */}
       <div className="grid grid-cols-1 gap-4 mb-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">業種区分特例</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">業種区分特例 <span className="text-[#e74c3c]">*</span></label> 
           <div className="space-y-2">
             <Controller
               name="mainCompany.industry.specialCase"

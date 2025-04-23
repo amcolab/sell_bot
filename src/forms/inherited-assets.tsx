@@ -350,7 +350,7 @@ const InheritedAssets = ({
       ))}
 
       {/* Include Spouse's Assets */}
-      <div className='mb-5'>
+      <div className='mb-4'>
         <label className='block mb-1.5 text-[#0a2e52] text-sm font-medium'>
           配偶者の財産も加える <span className='text-[#e74c3c]'>*</span>
         </label>
@@ -400,6 +400,9 @@ const InheritedAssets = ({
               </>
             )}
           />
+        </div>
+        <div className=''>
+          <label className='text-[12px] text-gray-600 mt-1'>※配偶者の財産も含めて相続税シミュレーションをする。</label>
         </div>
         {errors.includeSpouseAssets && (
           <span className='block mt-1 text-sm text-[#e74c3c]'>

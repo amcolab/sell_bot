@@ -141,7 +141,7 @@ export default function RegistrationContent({
           <div className='mb-5 p-4 bg-gray-50 rounded-lg'>
             <h3 className='text-lg font-medium mb-2'>申込金額の合計</h3>
             <p className='text-2xl font-bold text-[#0a2e52]'>
-              ¥{calculateTotalAmount().toLocaleString()}
+              ¥{calculateTotalAmount().toLocaleString()}（税抜）
             </p>
             <p className='text-sm text-gray-600 mt-2'>
               ※子会社の数が増えると価格が上がりますのでご注意ください。

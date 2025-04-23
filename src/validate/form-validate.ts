@@ -1,4 +1,8 @@
 import * as yup from 'yup';
+import dayjs from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+
+dayjs.extend(isSameOrAfter);
 
 // Helper function to transform number values
 const numberTransform = (value: string) => {
@@ -152,7 +156,16 @@ const katakanaRegex = /^[\u30A0-\u30FF\uFF65-\uFF9F\s]+$/;
 
 export const schema = yup.object().shape({
   // Basic information validation
-  registrationDate: yup.string().required('登録日は必須です'),
+  registrationDate: yup
+    .string()
+    .required('登録日は必須です')
+    .test('is-not-past', '過去の日付は選択できません', (value) => {
+      if (!value) return false; // Đảm bảo value không rỗng
+      const selectedDate = dayjs(value);
+      if (!selectedDate.isValid()) return false; // Kiểm tra định dạng ngày hợp lệ
+      const today = dayjs().startOf('day');
+      return selectedDate.isSame(today, 'day') || selectedDate.isAfter(today, 'day');
+    }),
   legalName: yup.string().required('法人名は必須です'),
   katakanaName: yup
     .string()
@@ -177,10 +190,10 @@ export const schema = yup.object().shape({
     .required('電話番号は必須です')
     .matches(/^\d{10,11}$/, '電話番号は10桁または11桁で入力してください'),
   position: yup.string(),
-  postalCode: yup.string(),
+  postalCode: yup.string().required('郵便番号は必須です'),
   address: yup.string().required('住所は必須です'),
   reportReceiving: yup.string().required('レポート受信方法は必須です'),
-  postalCodeReceiver: yup.string(),
+  postalCodeReceiver: yup.string().required('郵便番号は必須です'),
   receiverAddress: yup.string().required('レポート送付先住所は必須です'),
   referrerName: yup.string().when('reportReceiving', {
     is: '紹介者経由',
@@ -215,24 +228,26 @@ export const schema = yup.object().shape({
     then: (schema) => schema.required('子会社情報は必須です'),
     otherwise: (schema) => schema.notRequired(),
   }),
-  currentSalary: yup
-    .string()
-    .transform(numberTransform)
-    .matches(/^\d*$/, '数字のみ入力してください')
-    .test('is-valid-yen', '有効な金額を入力してください', (value) => {
-      if (!value) return true;
-      const numValue = Number(value);
-      return !isNaN(numValue) && numValue > 0 && numValue <= 999999999999;
-    }),
+  currentSalary:  yup
+  .string()
+  .transform(numberTransform)
+  .matches(/^\d*$/, '数字のみ入力してください')
+  .test('is-valid-yen', '有効な金額を入力してください', (value) => {
+    if (!value) return true;
+    const numValue = Number(value);
+    return !isNaN(numValue) && numValue >= 0 && numValue <= 999999999999;
+  })
+  .required('現在の給与は必須です'),
   numberOfYears: yup
     .string()
     .transform(numberTransform)
     .matches(/^\d*$/, '数字のみ入力してください')
-    .test('is-valid-yen', '有効な数値を入力してください', (value) => {
+    .test('is-valid-yen', '0より大きく150未満の数値を入力してください', (value) => {
       if (!value) return true;
       const numValue = Number(value);
-      return !isNaN(numValue) && numValue > 0 && numValue <= 100;
-    }),
+      return !isNaN(numValue) && numValue > 0 && numValue <= 150;
+    })
+    .required('取締役勤続年数は必須です'),
   maritalStatus: yup.string().required('配偶者の有無は必須です'),
   numberOfChildrenWithSpouse: yup
     .string()
@@ -370,7 +385,7 @@ export const schema = yup.object().shape({
       const numValue = Number(value);
       return !isNaN(numValue) && numValue >= 0 && numValue <= 999999999999;
     }),
-  includeSpouseAssets: yup.string().required('配偶者の財産も含めて相続税シミュレーションをする。'),
+  includeSpouseAssets: yup.string().required('配配偶者の財産も加える'),
   spouseName: yup.string().when('includeSpouseAssets', {
     is: 'はい',
     then: (schema) => schema.required('配偶者氏名は必須です'),

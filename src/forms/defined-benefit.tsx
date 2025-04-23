@@ -42,17 +42,10 @@ const DefinedBenefit = ({ control, errors, saveDataToLocalStorage }: any) => {
               placeholder='現在の月額役員報酬を入力してください（単位：円）'
               error={errors.currentSalary?.message}
               onchange={(e) => {
-                console.log(e.target.value);
                 const value = e.target.value.replace(/[^\d]/g, '')
-                if (value === '0') {
-                  field.onChange('0')
-                  saveDataToLocalStorage('currentSalary', '')
-                } else {
-                  const cleanValue = value.replace(/^0+/, '')
-                  const formattedValue = formatNumber(cleanValue)
-                  field.onChange(formattedValue)
-                  saveDataToLocalStorage('currentSalary', formattedValue)
-                }
+                const cleanValue = value.replace(/^0+/, '') || '0'
+                field.onChange(cleanValue)
+                handleBlur('currentSalary', cleanValue)
               }}
               onblur={() => {
                 if (!field.value) {

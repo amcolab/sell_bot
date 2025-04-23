@@ -116,6 +116,7 @@ export default function ResultDeliveryMethod({
                   handleLookup();
                 }}
                 value={field.value}
+                required={true}
               />
             )}
           />
@@ -156,7 +157,7 @@ export default function ResultDeliveryMethod({
                     id="referrerCompanyName"
                     type="text"
                     name="referrerCompanyName"
-                    placeholder="ご紹介者名を入力してください"
+                    placeholder="会社名を記入してください"
                     error={errors.referrerCompanyName?.message}
                     onchange={field.onChange}
                     onblur={() => handleBlur('referrerCompanyName', field.value)}

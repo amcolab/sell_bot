@@ -9,6 +9,7 @@
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
     "@line/liff": "2.25.1",
+    "dayjs": "^1.11.13",
     "japan-postal-code": "^0.3.0",
     "lodash": "^4.17.21",
     "react": "19.1.0",

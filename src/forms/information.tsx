@@ -15,26 +15,26 @@ export default function InformationForm({
   const handleBlur = (name: string, value: any) => {
     saveDataToLocalStorage(name, value)
   }
-  const [postalCode, setPostalCode] = useState('');
-    const handleLookup = async () => {
-      if (!postalCode) return;
-  
-      try {
-        await get(postalCode, (address: any) => {
-          console.log(address);
-  
-          const formattedAddress = `${address.prefecture}${address.city}${address.area}${address.street}`;
-          handleBlur('address', formattedAddress);
-          setValue('address', formattedAddress);
-          setError('address', { type: null, message: null }); // Clear error
-        });
-      } catch (err) {
-        console.error('Failed to fetch address:', err);
-      }
-    };
+  const [postalCode, setPostalCode] = useState('')
+  const handleLookup = async () => {
+    if (!postalCode) return
+
+    try {
+      await get(postalCode, (address: any) => {
+        console.log(address)
+
+        const formattedAddress = `${address.prefecture}${address.city}${address.area}${address.street}`
+        handleBlur('address', formattedAddress)
+        setValue('address', formattedAddress)
+        setError('address', { type: null, message: null }) // Clear error
+      })
+    } catch (err) {
+      console.error('Failed to fetch address:', err)
+    }
+  }
 
   return (
-    <HeaderSection title="基本情報" stepNumber={1}>
+    <HeaderSection title='基本情報' stepNumber={1}>
       <div className='mb-5'>
         <Controller
           name='registrationDate'
@@ -51,8 +51,6 @@ export default function InformationForm({
               onblur={() => handleBlur('registrationDate', field.value)}
               value={field.value}
               required={true}
-              disabled={true}
-              className='opacity-50'
             />
           )}
         />
@@ -239,31 +237,32 @@ export default function InformationForm({
           )}
         />
       </div>
-      <div className="mb-5">
-                <Controller
-                  name="postalCode"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      label="郵便番号"
-                      id="postalCode"
-                      type="text"
-                      name="postalCode"
-                      placeholder="郵便番号を入力してください"
-                      error={errors.postalCode?.message}
-                      onchange={(e) => {
-                        field.onChange(e);
-                        setPostalCode(e.target.value);
-                      }}
-                      onblur={() => {
-                        handleBlur('postalCode', field.value);
-                        handleLookup();
-                      }}
-                      value={field.value}
-                    />
-                  )}
-                />
-              </div>
+      <div className='mb-5'>
+        <Controller
+          name='postalCode'
+          control={control}
+          render={({ field }) => (
+            <Input
+              label='郵便番号'
+              id='postalCode'
+              type='text'
+              name='postalCode'
+              placeholder='郵便番号を入力してください'
+              error={errors.postalCode?.message}
+              onchange={(e) => {
+                field.onChange(e)
+                setPostalCode(e.target.value)
+              }}
+              onblur={() => {
+                handleBlur('postalCode', field.value)
+                handleLookup()
+              }}
+              value={field.value}
+              required={true}
+            />
+          )}
+        />
+      </div>
       <div className='mb-5'>
         <Controller
           name='address'
