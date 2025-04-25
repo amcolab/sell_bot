@@ -76,74 +76,74 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
   return (
     <div className="space-y-6">
       {/* Basic Information */}
-      <div className="bg-white p-6 rounded-lg shadow">
+      <div className="bg-white p-2 sm:p-6 rounded-lg shadow">
         <h2 className="text-xl font-bold mb-4">基本情報</h2>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-gray-600">登録日</p>
-            <p className="font-medium">{transformedData.registrationDate}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[14px] sm:text-[16px]">
+          <div className="flex">
+            <p className="text-back  font-medium sm:w-[180px] w-[165px] ">登録日: </p>
+            <p className="">{transformedData.registrationDate}</p>
           </div>
-          <div>
-            <p className="text-gray-600">法人名</p>
-            <p className="font-medium">{transformedData.legalName}</p>
+          <div className="flex">
+            <p className="text-back  font-medium sm:w-[180px] w-[165px]">法人名:</p>
+            <p className="">{transformedData.legalName}</p>
           </div>
-          <div>
-            <p className="text-gray-600">カタカナ名</p>
-            <p className="font-medium">{transformedData.katakanaName}</p>
+          <div className="flex">
+            <p className="text-back  font-medium sm:w-[180px] w-[165px]">カタカナ名</p>
+            <p className="">{transformedData.katakanaName}</p>
           </div>
-          <div>
-            <p className="text-gray-600">担当者名</p>
-            <p className="font-medium">
+          <div className="flex">
+            <p className="text-back  font-medium sm:w-[180px] w-[165px]">担当者名:</p>
+            <p className="">
               {transformedData.personChargeFirtName} {transformedData.personChargeLastName}
             </p>
           </div>
-          <div>
-            <p className="text-gray-600">担当者名（カタカナ）</p>
-            <p className="font-medium">
+          <div className="flex">
+            <p className="text-back  font-medium sm:w-[180px] w-[165px]">担当者名（カタカナ）:</p>
+            <p className="">
               {transformedData.personChargeFirtNameKatana} {transformedData.personChargeLastNameKatana}
             </p>
           </div>
-          <div>
-            <p className="text-gray-600">役職</p>
-            <p className="font-medium">{transformedData.position}</p>
+          <div className="flex">
+            <p className="text-back  font-medium sm:w-[180px] w-[165px]">役職:</p>
+            <p className="">{transformedData.position}</p>
           </div>
-          <div>
-            <p className="text-gray-600">メールアドレス</p>
-            <p className="font-medium">{transformedData.email}</p>
+          <div className="flex">
+            <p className="text-back  font-medium sm:w-[180px] w-[165px]">メールアドレス:</p>
+            <p className="">{transformedData.email}</p>
           </div>
-          <div>
-            <p className="text-gray-600">電話番号</p>
-            <p className="font-medium">{transformedData.phone}</p>
+          <div className="flex">
+            <p className="text-back  font-medium sm:w-[180px] w-[165px]">電話番号:</p>
+            <p className="">{transformedData.phone}</p>
           </div>
-          <div>
-            <p className="text-gray-600">住所</p>
-            <p className="font-medium">{transformedData.address}</p>
+          <div className="flex">
+            <p className="text-back  font-medium sm:w-[180px] w-[165px]">住所:</p>
+            <p className="">{transformedData.address}</p>
           </div>
-          <div>
-            <p className="text-gray-600">郵便番号</p>
-            <p className="font-medium">{transformedData.postalCode}</p>
+          <div className="flex">
+            <p className="text-back  font-medium sm:w-[180px] w-[165px]">郵便番号: </p>
+            <p className="">{transformedData.postalCode}</p>
           </div>
-          <div>
-            <p className="text-gray-600">レポート受信方法</p>
-            <p className="font-medium">{transformedData.reportReceiving}</p>
+          <div className="flex">
+            <p className="text-back  font-medium sm:w-[180px] w-[165px]">レポート受信方法:</p>
+            <p className="">{transformedData.reportReceiving}</p>
           </div>
-          <div>
-            <p className="text-gray-600">レポート送付先住所</p>
-            <p className="font-medium">{transformedData.receiverAddress}</p>
+          <div className="flex">
+            <p className="text-back  font-medium sm:w-[180px] w-[165px]">レポート送付先住所:</p>
+            <p className="">{transformedData.receiverAddress}</p>
           </div>
           {transformedData.reportReceiving === '紹介者経由' && (
             <>
-              <div>
-                <p className="text-gray-600">紹介者名</p>
-                <p className="font-medium">{transformedData.referrerName}</p>
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">紹介者名:</p>
+                <p className="">{transformedData.referrerName}</p>
               </div>
-              <div>
-                <p className="text-gray-600">紹介者メールアドレス</p>
-                <p className="font-medium">{transformedData.referrerEmail}</p>
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">紹介者メールアドレス:</p>
+                <p className="">{transformedData.referrerEmail}</p>
               </div>
-              <div>
-                <p className="text-gray-600">紹介者住所</p>
-                <p className="font-medium">{transformedData.referrerAddress}</p>
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">紹介者住所:</p>
+                <p className="">{transformedData.referrerAddress}</p>
               </div>
             </>
           )}
@@ -151,106 +151,106 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
       </div>
 
       {/* Application Information */}
-      <div className="bg-white p-6 rounded-lg shadow">
+      <div className="bg-white p-2 sm:p-6 rounded-lg shadow">
         <h2 className="text-xl font-bold mb-4">申請情報</h2>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-gray-600">申請種別</p>
-            <p className="font-medium">{transformedData.applicationType}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[14px] sm:text-[16px]">
+          <div className="flex">
+            <p className="text-back  font-medium sm:w-[180px] w-[165px]">申請種別:</p>
+            <p className="">{transformedData.applicationType}</p>
           </div>
           {transformedData.applicationType === '子会社含む' && (
-            <div>
-              <p className="text-gray-600">子会社数</p>
-              <p className="font-medium">{transformedData.numberOfSubsidiaries}</p>
+            <div className="flex">
+              <p className="text-back font-medium sm:w-[180px] w-[165px]">子会社数:</p>
+              <p className="">{transformedData.numberOfSubsidiaries}</p>
             </div>
           )}
         </div>
       </div>
 
       {/* Main Company Information */}
-      <div className="bg-white p-6 rounded-lg shadow">
+      <div className="bg-white p-2 sm:p-6 rounded-lg shadow">
         <h2 className="text-xl font-bold mb-4">本社情報</h2>
         <div className="space-y-4">
           <div>
             <h3 className="font-semibold mb-2">業種情報</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-gray-600">業種カテゴリー1</p>
-                <p className="font-medium">{transformedData.mainCompany.industry.category1 || '-'}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[14px] sm:text-[16px]">
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種カテゴリー1:</p>
+                <p className="">{transformedData.mainCompany.industry.category1 || '-'}</p>
               </div>
-              <div>
-                <p className="text-gray-600">業種カテゴリー2</p>
-                <p className="font-medium">{transformedData.mainCompany.industry.category2 || '-'}</p>
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種カテゴリー2:</p>
+                <p className="">{transformedData.mainCompany.industry.category2 || '-'}</p>
               </div>
-              <div>
-                <p className="text-gray-600">業種カテゴリー3</p>
-                <p className="font-medium">{transformedData.mainCompany.industry.category3 || '-'}</p>
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種カテゴリー3:</p>
+                <p className="">{transformedData.mainCompany.industry.category3 || '-'}</p>
               </div>
-              <div>
-                <p className="text-gray-600">業種区分特例</p>
-                <p className="font-medium">{transformedData.mainCompany.industry.specialCase || '-'}</p>
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種区分特例:</p>
+                <p className="">{transformedData.mainCompany.industry.specialCase || '-'}</p>
               </div>
               {transformedData.mainCompany.industry.specialCase === 'under50' && (
                 <>
-                  <div>
-                    <p className="text-gray-600">主たる事業の売上</p>
-                    <p className="font-medium">
+                  <div className="flex">
+                    <p className="text-back  font-medium sm:w-[180px] w-[165px]">主たる事業の売上:</p>
+                    <p className="">
                       {transformedData.mainCompany.industry.revenuePercentage1
                         ? `${transformedData.mainCompany.industry.revenuePercentage1}%`
                         : '-'}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-gray-600">2位の売上</p>
-                    <p className="font-medium">
+                  <div className="flex">
+                    <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の売上:</p>
+                    <p className="">
                       {transformedData.mainCompany.industry.revenuePercentage2
                         ? `${transformedData.mainCompany.industry.revenuePercentage2}%`
                         : '-'}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-gray-600">2位の業種カテゴリー1</p>
-                    <p className="font-medium">
+                  <div className="flex">
+                    <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種カテゴリー1:</p>
+                    <p className="">
                       {transformedData.mainCompany.industry.category1_2 || '-'}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-gray-600">2位の業種カテゴリー2</p>
-                    <p className="font-medium">
+                  <div className="flex">
+                    <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種カテゴリー2:</p>
+                    <p className="">
                       {transformedData.mainCompany.industry.category2_2 || '-'}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-gray-600">2位の業種カテゴリー3</p>
-                    <p className="font-medium">
+                  <div className="flex">
+                    <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種カテゴリー3:</p>
+                    <p className="">
                       {transformedData.mainCompany.industry.category3_2 || '-'}
                     </p>
                   </div>
                   {transformedData.mainCompany.industry.revenuePercentage3 && (
                     <>
-                      <div>
-                        <p className="text-gray-600">3位の売上</p>
-                        <p className="font-medium">
+                      <div className="flex">
+                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の売上:</p>
+                        <p className="">
                           {transformedData.mainCompany.industry.revenuePercentage3
                             ? `${transformedData.mainCompany.industry.revenuePercentage3}%`
                             : '-'}
                         </p>
                       </div>
-                      <div>
-                        <p className="text-gray-600">3位の業種カテゴリー1</p>
-                        <p className="font-medium">
+                      <div className="flex">
+                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種カテゴリー1:</p>
+                        <p className="">
                           {transformedData.mainCompany.industry.category1_3 || '-'}
                         </p>
                       </div>
-                      <div>
-                        <p className="text-gray-600">3位の業種カテゴリー2</p>
-                        <p className="font-medium">
+                      <div className="flex">
+                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種カテゴリー2:</p>
+                        <p className="">
                           {transformedData.mainCompany.industry.category2_3 || '-'}
                         </p>
                       </div>
-                      <div>
-                        <p className="text-gray-600">3位の業種カテゴリー3</p>
-                        <p className="font-medium">
+                      <div className="flex">
+                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種カテゴリー3:</p>
+                        <p className="">
                           {transformedData.mainCompany.industry.category3_3 || '-'}
                         </p>
                       </div>
@@ -262,14 +262,14 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
           </div>
           <div>
             <h3 className="font-semibold mb-2">財務情報</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-gray-600">利益</p>
-                <p className="font-medium">{formatCurrency(transformedData.mainCompany.financial.profit)}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[14px] sm:text-[16px]">
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">利益:</p>
+                <p className="">{formatCurrency(transformedData.mainCompany.financial.profit)}</p>
               </div>
-              <div>
-                <p className="text-gray-600">配当</p>
-                <p className="font-medium">{formatCurrency(transformedData.mainCompany.financial.dividends)}</p>
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">配当:</p>
+                <p className="">{formatCurrency(transformedData.mainCompany.financial.dividends)}</p>
               </div>
             </div>
           </div>
@@ -280,82 +280,82 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
       {transformedData.applicationType === '子会社含む' &&
         transformedData.subsidiaries &&
         transformedData.subsidiaries.length > 0 && (
-          <div className="bg-white p-6 rounded-lg shadow">
+          <div className="bg-white p-2 sm:p-6 rounded-lg shadow">
             <h2 className="text-xl font-bold mb-4">子会社情報</h2>
             {transformedData.subsidiaries.map((subsidiary: any, index: number) => (
               <div key={index + 1} className="mb-6">
                 <h3 className="font-semibold mb-2">子会社 {index + 1}</h3>
                 <div className="space-y-4">
                   <div>
-                    <h4 className="font-medium mb-2">業種情報</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-gray-600">業種カテゴリー1</p>
-                        <p className="font-medium">{subsidiary.industry.category1 || '-'}</p>
+                    <h4 className=" mb-2">業種情報</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[14px] sm:text-[16px]">
+                      <div className="flex">
+                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種カテゴリー1:</p>
+                        <p className="">{subsidiary.industry.category1 || '-'}</p>
                       </div>
-                      <div>
-                        <p className="text-gray-600">業種カテゴリー2</p>
-                        <p className="font-medium">{subsidiary.industry.category2 || '-'}</p>
+                      <div className="flex">
+                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種カテゴリー2:</p>
+                        <p className="">{subsidiary.industry.category2 || '-'}</p>
                       </div>
-                      <div>
-                        <p className="text-gray-600">業種カテゴリー3</p>
-                        <p className="font-medium">{subsidiary.industry.category3 || '-'}</p>
+                      <div className="flex">
+                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種カテゴリー3:</p>
+                        <p className="">{subsidiary.industry.category3 || '-'}</p>
                       </div>
-                      <div>
-                        <p className="text-gray-600">業種区分特例</p>
-                        <p className="font-medium">{subsidiary.industry.specialCase || '-'}</p>
+                      <div className="flex">
+                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種区分特例:</p>
+                        <p className="">{subsidiary.industry.specialCase || '-'}</p>
                       </div>
                       {subsidiary.industry.specialCase === 'under50' && (
                         <>
-                          <div>
-                            <p className="text-gray-600">主たる事業の売上</p>
-                            <p className="font-medium">
+                          <div className="flex">
+                            <p className="text-back  font-medium sm:w-[180px] w-[165px]">主たる事業の売上:</p>
+                            <p className="">
                               {subsidiary.industry.revenuePercentage1
                                 ? `${subsidiary.industry.revenuePercentage1}%`
                                 : '-'}
                             </p>
                           </div>
-                          <div>
-                            <p className="text-gray-600">2位の売上</p>
-                            <p className="font-medium">
+                          <div className="flex">
+                            <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の売上:</p>
+                            <p className="">
                               {subsidiary.industry.revenuePercentage2
                                 ? `${subsidiary.industry.revenuePercentage2}%`
                                 : '-'}
                             </p>
                           </div>
-                          <div>
-                            <p className="text-gray-600">2位の業種カテゴリー1</p>
-                            <p className="font-medium">{subsidiary.industry.category1_2 || '-'}</p>
+                          <div className="flex">
+                            <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種カテゴリー1:</p>
+                            <p className="">{subsidiary.industry.category1_2 || '-'}</p>
                           </div>
-                          <div>
-                            <p className="text-gray-600">2位の業種カテゴリー2</p>
-                            <p className="font-medium">{subsidiary.industry.category2_2 || '-'}</p>
+                          <div className="flex">
+                            <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種カテゴリー2:</p>
+                            <p className="">{subsidiary.industry.category2_2 || '-'}</p>
                           </div>
-                          <div>
-                            <p className="text-gray-600">2位の業種カテゴリー3</p>
-                            <p className="font-medium">{subsidiary.industry.category3_2 || '-'}</p>
+                          <div className="flex">
+                            <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種カテゴリー3:</p>
+                            <p className="">{subsidiary.industry.category3_2 || '-'}</p>
                           </div>
                           {subsidiary.industry.revenuePercentage3 && (
                             <>
-                              <div>
-                                <p className="text-gray-600">3位の売上</p>
-                                <p className="font-medium">
+                              <div className="flex">
+                                <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の売上:</p>
+                                <p className="">
                                   {subsidiary.industry.revenuePercentage3
                                     ? `${subsidiary.industry.revenuePercentage3}%`
                                     : '-'}
                                 </p>
                               </div>
-                              <div>
-                                <p className="text-gray-600">3位の業種カテゴリー1</p>
-                                <p className="font-medium">{subsidiary.industry.category1_3 || '-'}</p>
+                              <div className="flex">
+                                <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種カテゴリー1:</p>
+                                <p className="">{subsidiary.industry.category1_3 || '-'}</p>
                               </div>
-                              <div>
-                                <p className="text-gray-600">3位の業種カテゴリー2</p>
-                                <p className="font-medium">{subsidiary.industry.category2_3 || '-'}</p>
+                              <div className="flex">
+                                <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種カテゴリー2:</p>
+                                <p className="">{subsidiary.industry.category2_3 || '-'}</p>
                               </div>
-                              <div>
-                                <p className="text-gray-600">3位の業種カテゴリー3</p>
-                                <p className="font-medium">{subsidiary.industry.category3_3 || '-'}</p>
+                              <div className="flex">
+                                <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種カテゴリー3:</p>
+                                <p className="">{subsidiary.industry.category3_3 || '-'}</p>
                               </div>
                             </>
                           )}
@@ -364,15 +364,15 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-medium mb-2">財務情報</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-gray-600">利益</p>
-                        <p className="font-medium">{formatCurrency(subsidiary.financial.profit)}</p>
+                    <h4 className=" mb-2">財務情報</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[14px] sm:text-[16px]">
+                      <div className="flex">
+                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">利益:</p>
+                        <p className="">{formatCurrency(subsidiary.financial.profit)}</p>
                       </div>
-                      <div>
-                        <p className="text-gray-600">配当</p>
-                        <p className="font-medium">
+                      <div className="flex">
+                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">配当:</p>
+                        <p className="">
                           {formatCurrency(subsidiary.financial.dividends || '0')}
                         </p>
                       </div>
@@ -404,25 +404,25 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
       </div>
 
       {/* Inheritance Information */}
-      <div className="bg-white p-6 rounded-lg shadow">
+      <div className="bg-white p-2 sm:p-6 rounded-lg shadow">
         <h2 className="text-xl font-bold mb-4">相続情報</h2>
         <div className="space-y-4">
           <div>
             <h3 className="font-semibold mb-2">法定相続人</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-gray-600">配偶者の有無</p>
-                <p className="font-medium">{transformedData.maritalStatus}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[14px] sm:text-[16px]">
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">配偶者の有無:</p>
+                <p className="">{transformedData.maritalStatus}</p>
               </div>
               {transformedData.maritalStatus === 'はい' && (
                 <>
-                  <div>
-                    <p className="text-gray-600">現在の配偶者との間のお子様の人数</p>
-                    <p className="font-medium">{transformedData.numberOfChildrenWithSpouse || '0'}</p>
+                  <div className="flex">
+                    <p className="text-back  font-medium sm:w-[180px] w-[165px]">現在の配偶者との間のお子様の人数:</p>
+                    <p className="">{transformedData.numberOfChildrenWithSpouse || '0'}</p>
                   </div>
-                  <div>
-                    <p className="text-gray-600">上記以外のお子様の人数</p>
-                    <p className="font-medium">{transformedData.numberOfOtherChildren || '0'}</p>
+                  <div className="flex">
+                    <p className="text-back  font-medium sm:w-[180px] w-[165px]">上記以外のお子様の人数:</p>
+                    <p className="">{transformedData.numberOfOtherChildren || '0'}</p>
                   </div>
                 </>
               )}
@@ -431,13 +431,13 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
                 (!transformedData.numberOfOtherChildren ||
                   transformedData.numberOfOtherChildren === '0') && (
                   <>
-                    <div>
-                      <p className="text-gray-600">ご存命のご両親</p>
-                      <p className="font-medium">{transformedData.numberOfLivingParents || '0'}</p>
+                    <div className="flex">
+                      <p className="text-back  font-medium sm:w-[180px] w-[165px]">ご存命のご両親:</p>
+                      <p className="">{transformedData.numberOfLivingParents || '0'}</p>
                     </div>
-                    <div>
-                      <p className="text-gray-600">ご存命のご兄弟</p>
-                      <p className="font-medium">{transformedData.numberOfLivingSiblings || '0'}</p>
+                    <div className="flex">
+                      <p className="text-back  font-medium sm:w-[180px] w-[165px]">ご存命のご兄弟:</p>
+                      <p className="">{transformedData.numberOfLivingSiblings || '0'}</p>
                     </div>
                   </>
                 )}
@@ -446,38 +446,38 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
 
           <div>
             <h3 className="font-semibold mb-2">オーナーの財産</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-gray-600">オーナー氏名</p>
-                <p className="font-medium">{transformedData.ownerName}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[14px] sm:text-[16px]">
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">オーナー氏名:</p>
+                <p className="">{transformedData.ownerName}</p>
               </div>
-              <div>
-                <p className="text-gray-600">現預金</p>
-                <p className="font-medium">{formatCurrency(transformedData.cashAndDeposits)}</p>
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">現預金:</p>
+                <p className="">{formatCurrency(transformedData.cashAndDeposits)}</p>
               </div>
-              <div>
-                <p className="text-gray-600">退職金（支給予定額）</p>
-                <p className="font-medium">{formatCurrency(transformedData.retirementBenefits)}</p>
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">退職金（支給予定額）:</p>
+                <p className="">{formatCurrency(transformedData.retirementBenefits)}</p>
               </div>
-              <div>
-                <p className="text-gray-600">不動産</p>
-                <p className="font-medium">{formatCurrency(transformedData.realEstate)}</p>
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">不動産:</p>
+                <p className="">{formatCurrency(transformedData.realEstate)}</p>
               </div>
-              <div>
-                <p className="text-gray-600">有価証券（自社株以外）</p>
-                <p className="font-medium">{formatCurrency(transformedData.securities)}</p>
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">有価証券（自社株以外）:</p>
+                <p className="">{formatCurrency(transformedData.securities)}</p>
               </div>
-              <div>
-                <p className="text-gray-600">生命保険等の額</p>
-                <p className="font-medium">{formatCurrency(transformedData.amountOfLifeInsurance)}</p>
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">生命保険等の額:</p>
+                <p className="">{formatCurrency(transformedData.amountOfLifeInsurance)}</p>
               </div>
-              <div>
-                <p className="text-gray-600">その他財産（貸付金等）</p>
-                <p className="font-medium">{formatCurrency(transformedData.otherAssets)}</p>
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">その他財産（貸付金等）:</p>
+                <p className="">{formatCurrency(transformedData.otherAssets)}</p>
               </div>
-              <div>
-                <p className="text-gray-600">債務</p>
-                <p className="font-medium">{formatCurrency(transformedData.debts)}</p>
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">債務:</p>
+                <p className="">{formatCurrency(transformedData.debts)}</p>
               </div>
             </div>
           </div>
@@ -485,42 +485,42 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
           {transformedData.includeSpouseAssets === 'はい' && (
             <div>
               <h3 className="font-semibold mb-2">配偶者の財産</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-gray-600">配偶者氏名</p>
-                  <p className="font-medium">{transformedData.spouseName}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[14px] sm:text-[16px]">
+                <div className="flex">
+                  <p className="text-back  font-medium sm:w-[180px] w-[165px]">配偶者氏名:</p>
+                  <p className="">{transformedData.spouseName}</p>
                 </div>
-                <div>
-                  <p className="text-gray-600">現預金</p>
-                  <p className="font-medium">{formatCurrency(transformedData.spouseCashAndDeposits)}</p>
+                <div className="flex">
+                  <p className="text-back  font-medium sm:w-[180px] w-[165px]">現預金:</p>
+                  <p className="">{formatCurrency(transformedData.spouseCashAndDeposits)}</p>
                 </div>
-                <div>
-                  <p className="text-gray-600">退職金（支給予定額）</p>
-                  <p className="font-medium">
+                <div className="flex">
+                  <p className="text-back  font-medium sm:w-[180px] w-[165px]">退職金（支給予定額）:</p>
+                  <p className="">
                     {formatCurrency(transformedData.spouseRetirementBenefits)}
                   </p>
                 </div>
-                <div>
-                  <p className="text-gray-600">不動産</p>
-                  <p className="font-medium">{formatCurrency(transformedData.spouseRealEstate)}</p>
+                <div className="flex">
+                  <p className="text-back  font-medium sm:w-[180px] w-[165px]">不動産:</p>
+                  <p className="">{formatCurrency(transformedData.spouseRealEstate)}</p>
                 </div>
-                <div>
-                  <p className="text-gray-600">有価証券（自社株以外）</p>
-                  <p className="font-medium">{formatCurrency(transformedData.spouseSecurities)}</p>
+                <div className="flex">
+                  <p className="text-back  font-medium sm:w-[180px] w-[165px]">有価証券（自社株以外）:</p>
+                  <p className="">{formatCurrency(transformedData.spouseSecurities)}</p>
                 </div>
-                <div>
-                  <p className="text-gray-600">生命保険等の額</p>
-                  <p className="font-medium">
+                <div className="flex">
+                  <p className="text-back  font-medium sm:w-[180px] w-[165px]">生命保険等の額:</p>
+                  <p className="">
                     {formatCurrency(transformedData.spouseAmountOfLifeInsurance)}
                   </p>
                 </div>
-                <div>
-                  <p className="text-gray-600">その他財産（貸付金等）</p>
-                  <p className="font-medium">{formatCurrency(transformedData.spouseOtherAssets)}</p>
+                <div className="flex">
+                  <p className="text-back  font-medium sm:w-[180px] w-[165px]">その他財産（貸付金等）:</p>
+                  <p className="">{formatCurrency(transformedData.spouseOtherAssets)}</p>
                 </div>
-                <div>
-                  <p className="text-gray-600">債務</p>
-                  <p className="font-medium">{formatCurrency(transformedData.spouseDebts)}</p>
+                <div className="flex">
+                  <p className="text-back  font-medium sm:w-[180px] w-[165px]">債務:</p>
+                  <p className="">{formatCurrency(transformedData.spouseDebts)}</p>
                 </div>
               </div>
             </div>
@@ -529,17 +529,17 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
       </div>
 
       {/* Payment Information */}
-      <div className="bg-white p-6 rounded-lg shadow">
+      <div className="bg-white p-2 sm:p-6 rounded-lg shadow">
         <h2 className="text-xl font-bold mb-4">支払い情報</h2>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-gray-600">金額</p>
-            <p className="font-medium">{formatCurrency(transformedData.price.toString())}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[14px] sm:text-[16px]">
+          <div className="flex">
+            <p className="text-back  font-medium sm:w-[180px] w-[165px]">金額:</p>
+            <p className="">{formatCurrency(transformedData.price.toString())}</p>
           </div>
           {transformedData.voucher && (
-            <div>
-              <p className="text-gray-600">クーポンコード</p>
-              <p className="font-medium">{transformedData.voucher}</p>
+            <div className="flex">
+              <p className="text-back  font-medium sm:w-[180px] w-[165px]">クーポンコード:</p>
+              <p className="">{transformedData.voucher}</p>
             </div>
           )}
         </div>
