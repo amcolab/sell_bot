@@ -25,8 +25,6 @@ export default function ResultDeliveryMethod({
 
     try {
       await get(postalCodeReceiver, (address: any) => {
-        console.log(address)
-
         const formattedAddress = `${address.prefecture}${address.city}${address.area}${address.street}`
         handleBlur('receiverAddress', formattedAddress)
         setValue('receiverAddress', formattedAddress)

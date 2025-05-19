@@ -227,6 +227,7 @@ export const schema = yup.object().shape({
     then: (schema) => schema.required('子会社数を選択してください'),
     otherwise: (schema) => schema.notRequired(),
   }),
+  paymentMethod: yup.string().required('支払方法は必須です'),
   mainCompany: yup.object().shape({
     industry: industrySchema,
     financial: financialSchema,

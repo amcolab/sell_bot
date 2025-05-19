@@ -148,7 +148,47 @@ export default function RegistrationContent({
             </p>
           </div>
 
-          <div className='h-px bg-[#eee] my-5'></div>
+          <div className='flex gap-4'>
+              <Controller
+                name='paymentMethod'
+                control={control}
+                defaultValue=''
+                render={({ field }) => (
+                  <>
+                    <Radio
+                      id='paymentMethod-link'
+                      type='radio'
+                      name='paymentMethod'
+                      onChange={() => {
+                        field.onChange('link')
+                        handleBlur('applicationType', 'link')
+                      }}
+                      onBlur={field.onBlur}
+                      checked={field.value === 'link'}
+                      title='支払いリンク'
+                      required={true}
+                    />
+                    <Radio
+                      id='paymentMethod-bank_transfer'
+                      type='radio'
+                      name='paymentMethod'
+                      onChange={() => {
+                        field.onChange('bank_transfer')
+                        handleBlur('applicationType', 'bank_transfer')
+                      }}
+                      onBlur={field.onBlur}
+                      checked={field.value === 'bank_transfer'}
+                      title='銀行振込'
+                    />
+                  </>
+                )}
+              />
+            </div>
+            {errors.paymentMethod && (
+              <span className='block mt-1 text-sm text-[#e74c3c]'>
+                {errors.paymentMethod.message}
+              </span>
+            )}
         </div>
       </div>
     </HeaderSection>

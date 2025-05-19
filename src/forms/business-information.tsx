@@ -69,6 +69,7 @@ interface BusinessInformationProps {
   saveDataToLocalStorage: (key: string, value: string) => void;
   ensureSubsidiaryStructure: (index: number) => void;
   setValue: UseFormSetValue<FormValues>;
+  setError: any
 }
 
 const BusinessInformation = ({
@@ -77,6 +78,7 @@ const BusinessInformation = ({
   saveDataToLocalStorage,
   ensureSubsidiaryStructure,
   setValue,
+  setError,
 }: BusinessInformationProps) => {
   // Memoize saveDataToLocalStorage
   const memoizedSaveDataToLocalStorage = useCallback(
@@ -301,6 +303,9 @@ const BusinessInformation = ({
     if (mainCompanyIndustry.category2_2) {
       const parentId = parseInt(mainCompanyIndustry.category2_2);
       const children = getChildIndustries(parentId);
+      if (children.length === 0) {
+       setError('mainCompany.industry.category3_2', null);
+      }
       const newOptions = convertToSelectOptions(children);
       setThirdLevelIndustries2((prev) => {
         if (!isEqual(prev, newOptions)) {

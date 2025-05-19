@@ -17,6 +17,7 @@ import { useDebounce } from 'use-debounce'
 import Preview from './components/preview'
 import Logo from './assets/logo/logo.png'
 import { getIndustryById } from './utils/industryUtils'
+import PaymentResult from './components/bank-transfer-preview'
 
 function App() {
   const [userId, setUserId] = useState<string | null>(null)
@@ -27,6 +28,7 @@ function App() {
   const [showPreview, setShowPreview] = useState(false)
   const [formData, setFormData] = useState<any>(null)
   const [isSubmittingForm, setIsSubmittingForm] = useState(false)
+  const [bankTransferDetails, setBankTransferDetails] = useState<any | null>(null)
 
   const getSavedFormData = () => {
     const savedData = localStorage.getItem('formData')
@@ -309,7 +311,6 @@ function App() {
 
     setNestedValues(savedData)
   }, [setValue])
-  console.log(errors);
   const scrollToFirstError = () => {
     // First scroll to top of the form
     const formElement = document.querySelector('form')
@@ -393,7 +394,6 @@ function App() {
     };
   
     try {
-      console.log(transformedData);
       const response = await fetch(import.meta.env.VITE_API_URL, {
         method: 'POST',
         headers: {
@@ -415,6 +415,9 @@ function App() {
         });
         if (result.paymentLink) {
           window.location.href = result.paymentLink;
+        }
+        else {
+          setBankTransferDetails(result.bankTransferDetails)
         }
       } else {
         toast.error(result.message, {
@@ -476,7 +479,7 @@ function App() {
     <>
       {price && (
         <div className='min-h-screen bg-[#f5f5f5] flex justify-center items-center'>
-          <div className='w-full bg-white rounded-lg overflow-hidden shadow-[0_10px_30px_rgba(0,0,20,0.1)]'>
+          <div className='w-full min-h-screen bg-white rounded-lg overflow-hidden shadow-[0_10px_30px_rgba(0,0,20,0.1)]'>
             <div className='bg-gradient-to-r from-[#0a2e52] to-[#1a4980] text-white p-5 text-center'>
               <h1 className='text-xl font-semibold mb-1'>
                 株価値ドック申し込みフォーム
@@ -489,7 +492,10 @@ function App() {
             </div>
 
             <div className='p-3'>
-              {showPreview ? (
+              {bankTransferDetails ? 
+              (
+                <PaymentResult bankTransferDetails={bankTransferDetails} />
+              ) : showPreview ? (
                 <Preview
                   data={formData}
                   userId={userId}
@@ -529,6 +535,7 @@ function App() {
                     saveDataToLocalStorage={saveDataToLocalStorage}
                     ensureSubsidiaryStructure={ensureSubsidiaryStructure}
                     setValue={setValue}
+                    setError={setError}
                   />
                   <DefinedBenefit
                     control={control}

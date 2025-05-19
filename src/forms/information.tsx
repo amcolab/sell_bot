@@ -21,8 +21,6 @@ export default function InformationForm({
 
     try {
       await get(postalCode, (address: any) => {
-        console.log(address)
-
         const formattedAddress = `${address.prefecture}${address.city}${address.area}${address.street}`
         handleBlur('address', formattedAddress)
         setValue('address', formattedAddress)
