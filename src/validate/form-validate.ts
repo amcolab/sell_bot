@@ -171,13 +171,13 @@ export const schema = yup.object().shape({
     .string()
     .required('カタカナ名は必須です')
     .matches(katakanaRegex, 'カタカナで入力してください'),
-  personChargeFirtName: yup.string().required('担当者姓は必須です'),
+  personChargeFirstName: yup.string().required('担当者姓は必須です'),
   personChargeLastName: yup.string().required('担当者名は必須です'),
-  personChargeFirtNameKatana: yup
+  personChargeFirstNameKatakana: yup
     .string()
     .required('担当者姓（カタカナ）は必須です')
     .matches(katakanaRegex, 'カタカナで入力してください'),
-  personChargeLastNameKatana: yup
+  personChargeLastNameKatakana: yup
     .string()
     .required('担当者名（カタカナ）は必須です')
     .matches(katakanaRegex, 'カタカナで入力してください'),

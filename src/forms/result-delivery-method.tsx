@@ -127,11 +127,11 @@ export default function ResultDeliveryMethod({
                 control={control}
                 render={({ field }) => (
                   <Input
-                    label='郵送先住所'
+                    label='レポート郵送先'
                     id='receiverAddress'
                     type='text'
                     name='receiverAddress'
-                    placeholder='郵送先住所を入力してください'
+                    placeholder='レポート郵送先を入力してください'
                     error={errors.receiverAddress?.message}
                     onchange={field.onChange}
                     onblur={() => handleBlur('receiverAddress', field.value)}

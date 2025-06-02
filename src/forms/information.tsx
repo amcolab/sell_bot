@@ -114,18 +114,18 @@ export default function InformationForm({
       </div>
       <div className='mb-5 flex gap-4'>
         <Controller
-          name='personChargeFirtName'
+          name='personChargeFirstName'
           control={control}
           render={({ field }) => (
             <Input
               label='ご担当者名'
-              id='personChargeFirtName'
+              id='personChargeFirstName'
               type='text'
-              name='personChargeFirtName'
+              name='personChargeFirstName'
               placeholder='姓を入力してください'
-              error={errors.personChargeFirtName?.message}
+              error={errors.personChargeFirstName?.message}
               onchange={field.onChange}
-              onblur={() => handleBlur('personChargeFirtName', field.value)}
+              onblur={() => handleBlur('personChargeFirstName', field.value)}
               value={field.value}
               required={true}
             />
@@ -153,19 +153,19 @@ export default function InformationForm({
       </div>
       <div className='mb-5 flex gap-4'>
         <Controller
-          name='personChargeFirtNameKatana'
+          name='personChargeFirstNameKatakana'
           control={control}
           render={({ field }) => (
             <Input
               label='ご担当者名フリガナ'
-              id='personChargeFirtNameKatana'
+              id='personChargeFirstNameKatakana'
               type='text'
-              name='personChargeFirtNameKatana'
+              name='personChargeFirstNameKatakana'
               placeholder='姓（フリガナ）を入力してください'
-              error={errors.personChargeFirtNameKatana?.message}
+              error={errors.personChargeFirstNameKatakana?.message}
               onchange={field.onChange}
               onblur={() =>
-                handleBlur('personChargeFirtNameKatana', field.value)
+                handleBlur('personChargeFirstNameKatakana', field.value)
               }
               value={field.value}
               required={true}
@@ -173,20 +173,20 @@ export default function InformationForm({
           )}
         />
         <Controller
-          name='personChargeLastNameKatana'
+          name='personChargeLastNameKatakana'
           control={control}
           render={({ field }) => (
             <Input
               label='ご担当者名フリガナ'
-              id='personChargeLastNameKatana'
+              id='personChargeLastNameKatakana'
               type='text'
-              name='personChargeLastNameKatana'
+              name='personChargeLastNameKatakana'
               placeholder='名（フリガナ）を入力してください'
-              error={errors.personChargeLastNameKatana?.message}
+              error={errors.personChargeLastNameKatakana?.message}
               classNameLabel='opacity-0'
               onchange={field.onChange}
               onblur={() =>
-                handleBlur('personChargeLastNameKatana', field.value)
+                handleBlur('personChargeLastNameKatakana', field.value)
               }
               value={field.value}
               required={true}

@@ -94,13 +94,13 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
           <div className="flex">
             <p className="text-back  font-medium sm:w-[180px] w-[165px]">担当者名:</p>
             <p className="">
-              {transformedData.personChargeFirtName} {transformedData.personChargeLastName}
+              {transformedData.personChargeFirstName} {transformedData.personChargeLastName}
             </p>
           </div>
           <div className="flex">
             <p className="text-back  font-medium sm:w-[180px] w-[165px]">担当者名（カタカナ）:</p>
             <p className="">
-              {transformedData.personChargeFirtNameKatana} {transformedData.personChargeLastNameKatana}
+              {transformedData.personChargeFirstNameKatakana} {transformedData.personChargeLastNameKatakana}
             </p>
           </div>
           <div className="flex">
@@ -127,12 +127,12 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
             <p className="text-back  font-medium sm:w-[180px] w-[165px]">レポート受信方法:</p>
             <p className="">{transformedData.reportReceiving}</p>
           </div>
-          <div className="flex">
-            <p className="text-back  font-medium sm:w-[180px] w-[165px]">レポート送付先住所:</p>
-            <p className="">{transformedData.receiverAddress}</p>
-          </div>
           {transformedData.reportReceiving === '紹介者経由' && (
             <>
+            <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">会社名:</p>
+                <p className="">{transformedData.referrerCompanyName}</p>
+              </div>
               <div className="flex">
                 <p className="text-back  font-medium sm:w-[180px] w-[165px]">紹介者名:</p>
                 <p className="">{transformedData.referrerName}</p>
@@ -142,8 +142,12 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
                 <p className="">{transformedData.referrerEmail}</p>
               </div>
               <div className="flex">
-                <p className="text-back  font-medium sm:w-[180px] w-[165px]">紹介者住所:</p>
-                <p className="">{transformedData.referrerAddress}</p>
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">郵便番号:</p>
+                <p className="">{transformedData.postalCodeReceiver}</p>
+              </div>
+              <div className="flex">
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">レポート郵送先 :</p>
+                <p className="">{transformedData.receiverAddress}</p>
               </div>
             </>
           )}
@@ -175,15 +179,15 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
             <h3 className="font-semibold mb-2">業種情報</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[14px] sm:text-[16px]">
               <div className="flex">
-                <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種カテゴリー1:</p>
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種目大分類:</p>
                 <p className="">{transformedData.mainCompany.industry.category1 || '-'}</p>
               </div>
               <div className="flex">
-                <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種カテゴリー2:</p>
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種目中分類:</p>
                 <p className="">{transformedData.mainCompany.industry.category2 || '-'}</p>
               </div>
               <div className="flex">
-                <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種カテゴリー3:</p>
+                <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種目小分類:</p>
                 <p className="">{transformedData.mainCompany.industry.category3 || '-'}</p>
               </div>
               <div className="flex">
@@ -209,19 +213,19 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
                     </p>
                   </div>
                   <div className="flex">
-                    <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種カテゴリー1:</p>
+                    <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種目大分類:</p>
                     <p className="">
                       {transformedData.mainCompany.industry.category1_2 || '-'}
                     </p>
                   </div>
                   <div className="flex">
-                    <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種カテゴリー2:</p>
+                    <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種目中分類:</p>
                     <p className="">
                       {transformedData.mainCompany.industry.category2_2 || '-'}
                     </p>
                   </div>
                   <div className="flex">
-                    <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種カテゴリー3:</p>
+                    <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種目小分類:</p>
                     <p className="">
                       {transformedData.mainCompany.industry.category3_2 || '-'}
                     </p>
@@ -237,19 +241,19 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
                         </p>
                       </div>
                       <div className="flex">
-                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種カテゴリー1:</p>
+                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種目大分類:</p>
                         <p className="">
                           {transformedData.mainCompany.industry.category1_3 || '-'}
                         </p>
                       </div>
                       <div className="flex">
-                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種カテゴリー2:</p>
+                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種目中分類:</p>
                         <p className="">
                           {transformedData.mainCompany.industry.category2_3 || '-'}
                         </p>
                       </div>
                       <div className="flex">
-                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種カテゴリー3:</p>
+                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種目小分類:</p>
                         <p className="">
                           {transformedData.mainCompany.industry.category3_3 || '-'}
                         </p>
@@ -290,20 +294,16 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
                     <h4 className=" mb-2">業種情報</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[14px] sm:text-[16px]">
                       <div className="flex">
-                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種カテゴリー1:</p>
+                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種目大分類:</p>
                         <p className="">{subsidiary.industry.category1 || '-'}</p>
                       </div>
                       <div className="flex">
-                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種カテゴリー2:</p>
+                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種目中分類:</p>
                         <p className="">{subsidiary.industry.category2 || '-'}</p>
                       </div>
                       <div className="flex">
-                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種カテゴリー3:</p>
+                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種目小分類:</p>
                         <p className="">{subsidiary.industry.category3 || '-'}</p>
-                      </div>
-                      <div className="flex">
-                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">業種区分特例:</p>
-                        <p className="">{subsidiary.industry.specialCase || '-'}</p>
                       </div>
                       {subsidiary.industry.specialCase === 'under50' && (
                         <>
@@ -324,15 +324,15 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
                             </p>
                           </div>
                           <div className="flex">
-                            <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種カテゴリー1:</p>
+                            <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種目大分類:</p>
                             <p className="">{subsidiary.industry.category1_2 || '-'}</p>
                           </div>
                           <div className="flex">
-                            <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種カテゴリー2:</p>
+                            <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種目中分類:</p>
                             <p className="">{subsidiary.industry.category2_2 || '-'}</p>
                           </div>
                           <div className="flex">
-                            <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種カテゴリー3:</p>
+                            <p className="text-back  font-medium sm:w-[180px] w-[165px]">2位の業種目小分類:</p>
                             <p className="">{subsidiary.industry.category3_2 || '-'}</p>
                           </div>
                           {subsidiary.industry.revenuePercentage3 && (
@@ -346,15 +346,15 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
                                 </p>
                               </div>
                               <div className="flex">
-                                <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種カテゴリー1:</p>
+                                <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種目大分類:</p>
                                 <p className="">{subsidiary.industry.category1_3 || '-'}</p>
                               </div>
                               <div className="flex">
-                                <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種カテゴリー2:</p>
+                                <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種目中分類:</p>
                                 <p className="">{subsidiary.industry.category2_3 || '-'}</p>
                               </div>
                               <div className="flex">
-                                <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種カテゴリー3:</p>
+                                <p className="text-back  font-medium sm:w-[180px] w-[165px]">3位の業種目小分類:</p>
                                 <p className="">{subsidiary.industry.category3_3 || '-'}</p>
                               </div>
                             </>
@@ -369,12 +369,6 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
                       <div className="flex">
                         <p className="text-back  font-medium sm:w-[180px] w-[165px]">利益:</p>
                         <p className="">{formatCurrency(subsidiary.financial.profit)}</p>
-                      </div>
-                      <div className="flex">
-                        <p className="text-back  font-medium sm:w-[180px] w-[165px]">配当:</p>
-                        <p className="">
-                          {formatCurrency(subsidiary.financial.dividends || '0')}
-                        </p>
                       </div>
                     </div>
                   </div>
