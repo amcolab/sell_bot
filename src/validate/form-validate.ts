@@ -14,13 +14,13 @@ const numberTransform = (value: string) => {
 // Define industry schema
 const industrySchema = yup.object().shape({
   category1: yup.string().required('業種カテゴリー1は必須です'),
-  category2: yup.string().when('category1', {
-    is: (val: any) => val && val !== '',
+  category2: yup.string().when(['category1', 'hasChildren'], {
+    is: (category1: string, hasChildren: boolean) => category1 && category1 !== '' && hasChildren,
     then: (schema) => schema.required('業種カテゴリー2は必須です'),
     otherwise: (schema) => schema.notRequired(),
   }),
-  category3: yup.string().when('category2', {
-    is: (val: any) => val && val !== '',
+  category3: yup.string().when(['category2', 'hasChildren'], {
+    is: (category2: string, hasChildren: boolean) => category2 && category2 !== '' && hasChildren,
     then: (schema) => schema.required('業種カテゴリー3は必須です'),
     otherwise: (schema) => schema.notRequired(),
   }),
@@ -55,15 +55,15 @@ const industrySchema = yup.object().shape({
     then: (schema) => schema.required('２位の売上 - 業種カテゴリー1は必須です'),
     otherwise: (schema) => schema.notRequired(),
   }),
-  category2_2: yup.string().when(['specialCase', 'category1_2'], {
-    is: (specialCase: string, cat1_2: string) => 
-      specialCase === 'under50' && cat1_2 && cat1_2 !== '',
+  category2_2: yup.string().when(['specialCase', 'category1_2', 'hasChildren2'], {
+    is: (specialCase: string, cat1_2: string, hasChildren: boolean) => 
+      specialCase === 'under50' && cat1_2 && cat1_2 !== '' && hasChildren,
     then: (schema) => schema.required('２位の売上 - 業種カテゴリー2は必須です'),
     otherwise: (schema) => schema.notRequired(),
   }),
-  category3_2: yup.string().when(['specialCase', 'category2_2'], {
-    is: (specialCase: string, cat2_2: string) => 
-      specialCase === 'under50' && cat2_2 && cat2_2 !== '',
+  category3_2: yup.string().when(['specialCase', 'category2_2', 'hasChildren2'], {
+    is: (specialCase: string, cat2_2: string, hasChildren: boolean) => 
+      specialCase === 'under50' && cat2_2 && cat2_2 !== '' && hasChildren,
     then: (schema) => schema.required('２位の売上 - 業種カテゴリー3は必須です'),
     otherwise: (schema) => schema.notRequired(),
   }),
@@ -86,15 +86,15 @@ const industrySchema = yup.object().shape({
     then: (schema) => schema.required('３位の売上 - 業種カテゴリー1は必須です'),
     otherwise: (schema) => schema.notRequired(),
   }),
-  category2_3: yup.string().when(['specialCase', 'category1_3'], {
-    is: (specialCase: string, cat1_3: string) => 
-      specialCase === 'under50' && cat1_3 && cat1_3 !== '',
+  category2_3: yup.string().when(['specialCase', 'category1_3', 'hasChildren3'], {
+    is: (specialCase: string, cat1_3: string, hasChildren: boolean) => 
+      specialCase === 'under50' && cat1_3 && cat1_3 !== '' && hasChildren,
     then: (schema) => schema.required('３位の売上 - 業種カテゴリー2は必須です'),
     otherwise: (schema) => schema.notRequired(),
   }),
-  category3_3: yup.string().when(['specialCase', 'category2_3'], {
-    is: (specialCase: string, cat2_3: string) => 
-      specialCase === 'under50' && cat2_3 && cat2_3 !== '',
+  category3_3: yup.string().when(['specialCase', 'category2_3', 'hasChildren3'], {
+    is: (specialCase: string, cat2_3: string, hasChildren: boolean) => 
+      specialCase === 'under50' && cat2_3 && cat2_3 !== '' && hasChildren,
     then: (schema) => schema.required('３位の売上 - 業種カテゴリー3は必須です'),
     otherwise: (schema) => schema.notRequired(),
   }),
@@ -151,18 +151,16 @@ const subsidiarySchema = yup.object().shape({
   }),
 });
 
-// Katakana validation regex
 const katakanaRegex = /^[\u30A0-\u30FF\uFF65-\uFF9F\s]+$/;
 
 export const schema = yup.object().shape({
-  // Basic information validation
   registrationDate: yup
     .string()
     .required('登録日は必須です')
     .test('is-not-past', '過去の日付は選択できません', (value) => {
-      if (!value) return false; // Đảm bảo value không rỗng
+      if (!value) return false; 
       const selectedDate = dayjs(value);
-      if (!selectedDate.isValid()) return false; // Kiểm tra định dạng ngày hợp lệ
+      if (!selectedDate.isValid()) return false;
       const today = dayjs().startOf('day');
       return selectedDate.isSame(today, 'day') || selectedDate.isAfter(today, 'day');
     }),

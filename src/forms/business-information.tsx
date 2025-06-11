@@ -29,6 +29,9 @@ interface Industry {
   category3_3: string;
   category1_2: string;
   category1_3: string;
+  hasChildren: boolean;
+  hasChildren2: boolean;
+  hasChildren3: boolean;
 }
 
 interface Financial {
@@ -214,6 +217,7 @@ const BusinessInformation = ({
       const parentId = parseInt(mainCompanyIndustry.category1);
       const children = getChildIndustries(parentId);
       const newOptions = convertToSelectOptions(children);
+      const hasChildren = children.length > 0;
 
       setSecondLevelIndustries((prev) => {
         if (!isEqual(prev, newOptions)) {
@@ -221,6 +225,8 @@ const BusinessInformation = ({
         }
         return prev;
       });
+
+      setValue('mainCompany.industry.hasChildren', hasChildren, { shouldValidate: false });
     } else {
       setSecondLevelIndustries((prev) => {
         const defaultOption = [{ value: '', label: '選択してください' }];
@@ -237,6 +243,7 @@ const BusinessInformation = ({
         setValue('mainCompany.industry.category3', '', { shouldValidate: false });
         memoizedSaveDataToLocalStorage('mainCompany.industry.category3', '');
       }
+      setValue('mainCompany.industry.hasChildren', false, { shouldValidate: false });
     }
   }, [mainCompanyIndustry.category1, mainCompanyIndustry.category2, mainCompanyIndustry.category3, setValue, memoizedSaveDataToLocalStorage]);
 
@@ -246,12 +253,16 @@ const BusinessInformation = ({
       const parentId = parseInt(mainCompanyIndustry.category2);
       const children = getChildIndustries(parentId);
       const newOptions = convertToSelectOptions(children);
+      const hasChildren = children.length > 0;
+
       setThirdLevelIndustries((prev) => {
         if (!isEqual(prev, newOptions)) {
           return newOptions;
         }
         return prev;
       });
+
+      setValue('mainCompany.industry.hasChildren', hasChildren, { shouldValidate: false });
     } else {
       setThirdLevelIndustries((prev) => {
         const defaultOption = [{ value: '', label: '選択してください' }];
@@ -264,6 +275,7 @@ const BusinessInformation = ({
         setValue('mainCompany.industry.category3', '', { shouldValidate: false });
         memoizedSaveDataToLocalStorage('mainCompany.industry.category3', '');
       }
+      setValue('mainCompany.industry.hasChildren', false, { shouldValidate: false });
     }
   }, [mainCompanyIndustry.category2, mainCompanyIndustry.category3, setValue, memoizedSaveDataToLocalStorage]);
 
@@ -273,12 +285,16 @@ const BusinessInformation = ({
       const parentId = parseInt(mainCompanyIndustry.category1_2);
       const children = getChildIndustries(parentId);
       const newOptions = convertToSelectOptions(children);
+      const hasChildren = children.length > 0;
+
       setSecondLevelIndustries2((prev) => {
         if (!isEqual(prev, newOptions)) {
           return newOptions;
         }
         return prev;
       });
+
+      setValue('mainCompany.industry.hasChildren2', hasChildren, { shouldValidate: false });
     } else {
       setSecondLevelIndustries2((prev) => {
         const defaultOption = [{ value: '', label: '選択してください' }];
@@ -295,6 +311,7 @@ const BusinessInformation = ({
         setValue('mainCompany.industry.category3_2', '', { shouldValidate: false });
         memoizedSaveDataToLocalStorage('mainCompany.industry.category3_2', '');
       }
+      setValue('mainCompany.industry.hasChildren2', false, { shouldValidate: false });
     }
   }, [mainCompanyIndustry.category1_2, mainCompanyIndustry.category2_2, mainCompanyIndustry.category3_2, setValue, memoizedSaveDataToLocalStorage]);
 
@@ -303,16 +320,17 @@ const BusinessInformation = ({
     if (mainCompanyIndustry.category2_2) {
       const parentId = parseInt(mainCompanyIndustry.category2_2);
       const children = getChildIndustries(parentId);
-      if (children.length === 0) {
-       setError('mainCompany.industry.category3_2', null);
-      }
       const newOptions = convertToSelectOptions(children);
+      const hasChildren = children.length > 0;
+
       setThirdLevelIndustries2((prev) => {
         if (!isEqual(prev, newOptions)) {
           return newOptions;
         }
         return prev;
       });
+
+      setValue('mainCompany.industry.hasChildren2', hasChildren, { shouldValidate: false });
     } else {
       setThirdLevelIndustries2((prev) => {
         const defaultOption = [{ value: '', label: '選択してください' }];
@@ -325,6 +343,7 @@ const BusinessInformation = ({
         setValue('mainCompany.industry.category3_2', '', { shouldValidate: false });
         memoizedSaveDataToLocalStorage('mainCompany.industry.category3_2', '');
       }
+      setValue('mainCompany.industry.hasChildren2', false, { shouldValidate: false });
     }
   }, [mainCompanyIndustry.category2_2, mainCompanyIndustry.category3_2, setValue, memoizedSaveDataToLocalStorage]);
 
@@ -334,12 +353,16 @@ const BusinessInformation = ({
       const parentId = parseInt(mainCompanyIndustry.category1_3);
       const children = getChildIndustries(parentId);
       const newOptions = convertToSelectOptions(children);
+      const hasChildren = children.length > 0;
+
       setSecondLevelIndustries3((prev) => {
         if (!isEqual(prev, newOptions)) {
           return newOptions;
         }
         return prev;
       });
+
+      setValue('mainCompany.industry.hasChildren3', hasChildren, { shouldValidate: false });
     } else {
       setSecondLevelIndustries3((prev) => {
         const defaultOption = [{ value: '', label: '選択してください' }];
@@ -356,6 +379,7 @@ const BusinessInformation = ({
         setValue('mainCompany.industry.category3_3', '', { shouldValidate: false });
         memoizedSaveDataToLocalStorage('mainCompany.industry.category3_3', '');
       }
+      setValue('mainCompany.industry.hasChildren3', false, { shouldValidate: false });
     }
   }, [mainCompanyIndustry.category1_3, mainCompanyIndustry.category2_3, mainCompanyIndustry.category3_3, setValue, memoizedSaveDataToLocalStorage]);
 
@@ -365,12 +389,16 @@ const BusinessInformation = ({
       const parentId = parseInt(mainCompanyIndustry.category2_3);
       const children = getChildIndustries(parentId);
       const newOptions = convertToSelectOptions(children);
+      const hasChildren = children.length > 0;
+
       setThirdLevelIndustries3((prev) => {
         if (!isEqual(prev, newOptions)) {
           return newOptions;
         }
         return prev;
       });
+
+      setValue('mainCompany.industry.hasChildren3', hasChildren, { shouldValidate: false });
     } else {
       setThirdLevelIndustries3((prev) => {
         const defaultOption = [{ value: '', label: '選択してください' }];
@@ -383,6 +411,7 @@ const BusinessInformation = ({
         setValue('mainCompany.industry.category3_3', '', { shouldValidate: false });
         memoizedSaveDataToLocalStorage('mainCompany.industry.category3_3', '');
       }
+      setValue('mainCompany.industry.hasChildren3', false, { shouldValidate: false });
     }
   }, [mainCompanyIndustry.category2_3, mainCompanyIndustry.category3_3, setValue, memoizedSaveDataToLocalStorage]);
 
@@ -547,6 +576,11 @@ const BusinessInformation = ({
               )}
             />
           </div>
+          {errors.mainCompany?.industry?.specialCase && (
+          <span className='block mt-1 text-sm text-[#e74c3c]'>
+            {errors.mainCompany?.industry?.specialCase?.message}
+          </span>
+        )}
         </div>
 
         {mainCompanyIndustry.specialCase === 'under50' && (
