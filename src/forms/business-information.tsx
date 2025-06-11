@@ -44,12 +44,7 @@ interface Subsidiary {
     category1: string;
     category2: string;
     category3: string;
-    category1_2: string;
-    category2_2: string;
-    category3_2: string;
-    category1_3: string;
-    category2_3: string;
-    category3_3: string;
+    hasChildren: boolean;
   };
   financial: {
     profit: string;
@@ -161,10 +156,6 @@ const BusinessInformation = ({
       Array(subsidiariesCount).fill({
         secondLevel: [{ value: '', label: '選択してください' }],
         thirdLevel: [{ value: '', label: '選択してください' }],
-        secondLevel_2: [{ value: '', label: '選択してください' }],
-        thirdLevel_2: [{ value: '', label: '選択してください' }],
-        secondLevel_3: [{ value: '', label: '選択してください' }],
-        thirdLevel_3: [{ value: '', label: '選択してください' }],
       }),
     [subsidiariesCount]
   );
@@ -191,12 +182,7 @@ const BusinessInformation = ({
               category1: '',
               category2: '',
               category3: '',
-              category1_2: '',
-              category2_2: '',
-              category3_2: '',
-              category1_3: '',
-              category2_3: '',
-              category3_3: '',
+              hasChildren: false,
             },
             financial: {
               profit: '0',
@@ -218,6 +204,7 @@ const BusinessInformation = ({
       const children = getChildIndustries(parentId);
       const newOptions = convertToSelectOptions(children);
       const hasChildren = children.length > 0;
+      console.log(hasChildren)
 
       setSecondLevelIndustries((prev) => {
         if (!isEqual(prev, newOptions)) {
@@ -275,7 +262,6 @@ const BusinessInformation = ({
         setValue('mainCompany.industry.category3', '', { shouldValidate: false });
         memoizedSaveDataToLocalStorage('mainCompany.industry.category3', '');
       }
-      setValue('mainCompany.industry.hasChildren', false, { shouldValidate: false });
     }
   }, [mainCompanyIndustry.category2, mainCompanyIndustry.category3, setValue, memoizedSaveDataToLocalStorage]);
 
@@ -311,7 +297,6 @@ const BusinessInformation = ({
         setValue('mainCompany.industry.category3_2', '', { shouldValidate: false });
         memoizedSaveDataToLocalStorage('mainCompany.industry.category3_2', '');
       }
-      setValue('mainCompany.industry.hasChildren2', false, { shouldValidate: false });
     }
   }, [mainCompanyIndustry.category1_2, mainCompanyIndustry.category2_2, mainCompanyIndustry.category3_2, setValue, memoizedSaveDataToLocalStorage]);
 
@@ -343,7 +328,6 @@ const BusinessInformation = ({
         setValue('mainCompany.industry.category3_2', '', { shouldValidate: false });
         memoizedSaveDataToLocalStorage('mainCompany.industry.category3_2', '');
       }
-      setValue('mainCompany.industry.hasChildren2', false, { shouldValidate: false });
     }
   }, [mainCompanyIndustry.category2_2, mainCompanyIndustry.category3_2, setValue, memoizedSaveDataToLocalStorage]);
 
@@ -379,7 +363,6 @@ const BusinessInformation = ({
         setValue('mainCompany.industry.category3_3', '', { shouldValidate: false });
         memoizedSaveDataToLocalStorage('mainCompany.industry.category3_3', '');
       }
-      setValue('mainCompany.industry.hasChildren3', false, { shouldValidate: false });
     }
   }, [mainCompanyIndustry.category1_3, mainCompanyIndustry.category2_3, mainCompanyIndustry.category3_3, setValue, memoizedSaveDataToLocalStorage]);
 
@@ -411,7 +394,6 @@ const BusinessInformation = ({
         setValue('mainCompany.industry.category3_3', '', { shouldValidate: false });
         memoizedSaveDataToLocalStorage('mainCompany.industry.category3_3', '');
       }
-      setValue('mainCompany.industry.hasChildren3', false, { shouldValidate: false });
     }
   }, [mainCompanyIndustry.category2_3, mainCompanyIndustry.category3_3, setValue, memoizedSaveDataToLocalStorage]);
 
@@ -435,35 +417,54 @@ const BusinessInformation = ({
   // Update subsidiary industry options
   useEffect(() => {
     const newSubsidiaryIndustries = subsidiaries.map((_: any, index: number) => {
+      const secondLevel = subsidiaries[index]?.industry?.category1
+        ? convertToSelectOptions(getChildIndustries(parseInt(subsidiaries[index].industry.category1)))
+        : [{ value: '', label: '選択してください' }];
+  
+      const thirdLevel = subsidiaries[index]?.industry?.category2
+        ? convertToSelectOptions(getChildIndustries(parseInt(subsidiaries[index].industry.category2)))
+        : [{ value: '', label: '選択してください' }];
+  
+      // Only update hasChildren if it has changed
+      if (subsidiaries[index]?.industry?.category1) {
+        const hasChildren = secondLevel.length > 1;
+        if (subsidiaries[index].industry.hasChildren !== hasChildren) {
+          setValue(`subsidiaries.${index}.industry.hasChildren`, hasChildren, {
+            shouldValidate: false,
+            shouldDirty: false, // Prevent form state changes that trigger re-renders
+          });
+        }
+      }
+  
+      if (subsidiaries[index]?.industry?.category2) {
+        const hasChildren = thirdLevel.length > 1;
+        if (subsidiaries[index].industry.hasChildren !== hasChildren) {
+          setValue(`subsidiaries.${index}.industry.hasChildren`, hasChildren, {
+            shouldValidate: false,
+            shouldDirty: false,
+          });
+        }
+      }
+  
       return {
-        secondLevel: subsidiaries[index]?.industry?.category1
-          ? convertToSelectOptions(getChildIndustries(parseInt(subsidiaries[index].industry.category1)))
-          : [{ value: '', label: '選択してください' }],
-        thirdLevel: subsidiaries[index]?.industry?.category2
-          ? convertToSelectOptions(getChildIndustries(parseInt(subsidiaries[index].industry.category2)))
-          : [{ value: '', label: '選択してください' }],
-        secondLevel_2: subsidiaries[index]?.industry?.category1_2
-          ? convertToSelectOptions(getChildIndustries(parseInt(subsidiaries[index].industry.category1_2)))
-          : [{ value: '', label: '選択してください' }],
-        thirdLevel_2: subsidiaries[index]?.industry?.category2_2
-          ? convertToSelectOptions(getChildIndustries(parseInt(subsidiaries[index].industry.category2_2)))
-          : [{ value: '', label: '選択してください' }],
-        secondLevel_3: subsidiaries[index]?.industry?.category1_3
-          ? convertToSelectOptions(getChildIndustries(parseInt(subsidiaries[index].industry.category1_3)))
-          : [{ value: '', label: '選択してください' }],
-        thirdLevel_3: subsidiaries[index]?.industry?.category2_3
-          ? convertToSelectOptions(getChildIndustries(parseInt(subsidiaries[index].industry.category2_3)))
-          : [{ value: '', label: '選択してください' }],
+        secondLevel,
+        thirdLevel,
       };
     });
-
+  
     setSubsidiaryIndustries((prev) => {
       if (!isEqual(prev, newSubsidiaryIndustries)) {
         return newSubsidiaryIndustries;
       }
       return prev;
     });
-  }, [subsidiaries]);
+  }, [
+    JSON.stringify(subsidiaries.map((s: any) => ({
+      category1: s?.industry?.category1,
+      category2: s?.industry?.category2,
+    }))),
+    setValue,
+  ]);
 
   return (
     <HeaderSection title="会社情報" stepNumber={4}>
@@ -484,6 +485,7 @@ const BusinessInformation = ({
                 options={topLevelIndustries}
                 onchange={(e) => {
                   field.onChange(e.target.value);
+                  setValue('mainCompany.industry.category2', '');
                   memoizedSaveDataToLocalStorage('mainCompany.industry.category1', e.target.value);
                 }}
               />
@@ -507,6 +509,7 @@ const BusinessInformation = ({
                   options={secondLevelIndustries}
                   onchange={(e) => {
                     field.onChange(e.target.value);
+                    setValue('mainCompany.industry.category3', '');
                     memoizedSaveDataToLocalStorage('mainCompany.industry.category2', e.target.value);
                   }}
                 />
@@ -677,6 +680,7 @@ const BusinessInformation = ({
                       options={topLevelIndustries}
                       onchange={(e) => {
                         field.onChange(e.target.value);
+                        setValue('mainCompany.industry.category2_2', '');
                         memoizedSaveDataToLocalStorage('mainCompany.industry.category1_2', e.target.value);
                       }}
                     />
@@ -700,6 +704,7 @@ const BusinessInformation = ({
                         options={secondLevelIndustries2}
                         onchange={(e) => {
                           field.onChange(e.target.value);
+                          setValue('mainCompany.industry.category3_2', '');
                           memoizedSaveDataToLocalStorage('mainCompany.industry.category2_2', e.target.value);
                         }}
                       />
@@ -794,6 +799,7 @@ const BusinessInformation = ({
                             options={topLevelIndustries}
                             onchange={(e) => {
                               field.onChange(e.target.value);
+                              setValue('mainCompany.industry.category2_3', '');
                               memoizedSaveDataToLocalStorage('mainCompany.industry.category1_3', e.target.value);
                             }}
                           />
@@ -817,6 +823,7 @@ const BusinessInformation = ({
                               options={secondLevelIndustries3}
                               onchange={(e) => {
                                 field.onChange(e.target.value);
+                                  setValue('mainCompany.industry.category3_3', '');
                                 memoizedSaveDataToLocalStorage('mainCompany.industry.category2_3', e.target.value);
                               }}
                             />
@@ -947,6 +954,7 @@ const BusinessInformation = ({
                         options={topLevelIndustries}
                         onchange={(e) => {
                           field.onChange(e.target.value);
+                          setValue(`subsidiaries.${index}.industry.category2`, '');
                           ensureSubsidiaryStructure(index);
                           memoizedSaveDataToLocalStorage(`subsidiaries.${index}.industry.category1`, e.target.value);
                         }}
@@ -971,6 +979,7 @@ const BusinessInformation = ({
                           options={subsidiaryIndustries[index]?.secondLevel || [{ value: '', label: '選択してください' }]}
                           onchange={(e) => {
                             field.onChange(e.target.value);
+                            setValue(`subsidiaries.${index}.industry.category3`, '');
                             ensureSubsidiaryStructure(index);
                             memoizedSaveDataToLocalStorage(`subsidiaries.${index}.industry.category2`, e.target.value);
                           }}

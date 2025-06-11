@@ -127,13 +127,13 @@ const financialSchema = yup.object().shape({
 const subsidiarySchema = yup.object().shape({
   industry: yup.object().shape({
     category1: yup.string().required('業種カテゴリー1は必須です'),
-    category2: yup.string().when('category1', {
-      is: (val: any) => val && val !== '',
+    category2: yup.string().when(['category1', 'hasChildren'], {
+      is: (category1: string, hasChildren: boolean) => category1 && category1 !== '' && hasChildren,
       then: (schema) => schema.required('業種カテゴリー2は必須です'),
       otherwise: (schema) => schema.notRequired(),
     }),
-    category3: yup.string().when('category2', {
-      is: (val: any) => val && val !== '',
+    category3: yup.string().when(['category2', 'hasChildren'], {
+      is: (category2: string, hasChildren: boolean) => category2 && category2 !== '' && hasChildren,
       then: (schema) => schema.required('業種カテゴリー3は必須です'),
       otherwise: (schema) => schema.notRequired(),
     }),
