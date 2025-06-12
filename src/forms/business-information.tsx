@@ -204,7 +204,6 @@ const BusinessInformation = ({
       const children = getChildIndustries(parentId);
       const newOptions = convertToSelectOptions(children);
       const hasChildren = children.length > 0;
-      console.log(hasChildren)
 
       setSecondLevelIndustries((prev) => {
         if (!isEqual(prev, newOptions)) {

@@ -24,6 +24,7 @@ function App() {
   const [currentDate] = useState(new Date().toISOString().split('T')[0])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isInitialLoading, setIsInitialLoading] = useState(true)
   const [price, setPrice] = useState<any>()
   const [showPreview, setShowPreview] = useState(false)
   const [formData, setFormData] = useState<any>(null)
@@ -464,6 +465,7 @@ function App() {
       console.error('Error fetching voucher:', error)
     } finally {
       setIsLoading(false)
+      setIsInitialLoading(false)
     }
   }
   
@@ -475,18 +477,34 @@ function App() {
   }, [debouncedVoucher])
   
 
+  if (isInitialLoading) {
+    return (
+      <div className='min-h-screen bg-[#f5f5f5] flex justify-center items-center'>
+        <div className='w-full min-h-screen bg-white rounded-lg overflow-hidden shadow-[0_10px_30px_rgba(0,0,20,0.1)]'>
+          <div className='text-white p-5 text-center'>
+            <div className='flex justify-center w-full'>
+              <div className='h-[50px]'>
+                <img src={Logo} alt='logo' className='w-[200px]' />
+              </div>
+            </div>
+          </div>
+          <div className='p-3 flex justify-center items-center min-h-[400px]'>
+            <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500'></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
       {price && (
         <div className='min-h-screen bg-[#f5f5f5] flex justify-center items-center'>
           <div className='w-full min-h-screen bg-white rounded-lg overflow-hidden shadow-[0_10px_30px_rgba(0,0,20,0.1)]'>
-            <div className='bg-gradient-to-r from-[#0a2e52] to-[#1a4980] text-white p-5 text-center'>
-              <h1 className='text-xl font-semibold mb-1'>
-                株価値ドック申し込みフォーム
-              </h1>
+            <div className=' text-white p-5 text-center'>
               <div className='flex justify-center w-full'>
-                <div className='bg-white w-[210px] h-[50px] px-5 py-2'>
-                  <img src={Logo} alt='logo' className='w-full h-full object-contain' />
+                <div className=' h-[50px]'>
+                  <img src={Logo} alt='logo' className='w-[200px] ' />
                 </div>
               </div>
             </div>

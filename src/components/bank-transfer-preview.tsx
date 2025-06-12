@@ -28,28 +28,28 @@ const PaymentResult: React.FC<PaymentResultProps> = ({ bankTransferDetails }) =>
         銀行振込の詳細
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white p-4 shadow-lg rounded-md">
-        <div>
-          <span className="font-semibold text-gray-600">口座番号:</span>
+        <div className="flex">
+          <span className="font-semibold text-gray-600 min-w-[110px]">銀行口座番号:</span>
           <p className="text-gray-800">{bankTransferDetails.accountNumber}</p>
         </div>
-        <div>
-          <span className="font-semibold text-gray-600">銀行名:</span>
+        <div className="flex">
+          <span className="font-semibold text-gray-600 min-w-[110px]">銀行名:</span>
           <p className="text-gray-800">{bankTransferDetails.bankName}</p>
         </div>
-        <div>
-          <span className="font-semibold text-gray-600">支店名:</span>
+        <div className="flex">
+          <span className="font-semibold text-gray-600 min-w-[110px]">支店名:</span>
           <p className="text-gray-800">{bankTransferDetails.branchName}</p>
         </div>
-        <div>
-          <span className="font-semibold text-gray-600">銀行コード:</span>
+        <div className="flex">
+          <span className="font-semibold text-gray-600 min-w-[110px]">銀行コード:</span>
           <p className="text-gray-800">{bankTransferDetails.bankCode}</p>
         </div>
-        <div>
-          <span className="font-semibold text-gray-600">支店コード:</span>
+        <div className="flex">
+          <span className="font-semibold text-gray-600 min-w-[110px]">支店コード:</span>
           <p className="text-gray-800">{bankTransferDetails.branchCode}</p>
         </div>
-        <div>
-          <span className="font-semibold text-gray-600">口座名義人:</span>
+        <div className="flex">
+          <span className="font-semibold text-gray-600 min-w-[110px]">口座名義人:</span>
           <p className="text-gray-800">{bankTransferDetails.accountHolderName}</p>
         </div>
       </div>

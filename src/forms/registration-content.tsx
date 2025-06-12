@@ -165,7 +165,7 @@ export default function RegistrationContent({
                       }}
                       onBlur={field.onBlur}
                       checked={field.value === 'link'}
-                      title='支払いリンク'
+                      title='クレジットカード決済'
                       required={true}
                     />
                     <Radio
