@@ -15,7 +15,7 @@ import DefinedBenefit from './forms/defined-benefit'
 import InheritedAssets from './forms/inherited-assets'
 import { useDebounce } from 'use-debounce'
 import Preview from './components/preview'
-import Logo from './assets/logo/logo.png'
+import Logo from './assets/logo/logo.jpg'
 import { getIndustryById } from './utils/industryUtils'
 import PaymentResult from './components/bank-transfer-preview'
 
@@ -96,7 +96,6 @@ function App() {
   }
 
   const {
-    register,
     handleSubmit,
     control,
     watch,
@@ -483,8 +482,8 @@ function App() {
         <div className='w-full min-h-screen bg-white rounded-lg overflow-hidden shadow-[0_10px_30px_rgba(0,0,20,0.1)]'>
           <div className='text-white p-5 text-center'>
             <div className='flex justify-center w-full'>
-              <div className='h-[50px]'>
-                <img src={Logo} alt='logo' className='w-[200px]' />
+              <div className='h-[50px] relative left-5'>
+                <img src={Logo} alt='logo' className='w-[500px] h-[70px] max-w-none' />
               </div>
             </div>
           </div>
@@ -503,8 +502,8 @@ function App() {
           <div className='w-full min-h-screen bg-white rounded-lg overflow-hidden shadow-[0_10px_30px_rgba(0,0,20,0.1)]'>
             <div className=' text-white p-5 text-center'>
               <div className='flex justify-center w-full'>
-                <div className=' h-[50px]'>
-                  <img src={Logo} alt='logo' className='w-[200px] ' />
+                <div className=' h-[50px] relative left-5'>
+                  <img src={Logo} alt='logo' className='w-[500px] h-[70px] max-w-none' />
                 </div>
               </div>
             </div>

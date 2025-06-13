@@ -319,8 +319,8 @@ const InheritedAssets = ({
                     cashAndDeposits: '現預金',
                     retirementBenefits: '退職金（支給予定額）',
                     realEstate: '不動産',
-                    securities: '有価証券（自社株以外）',
-                    amountOfLifeInsurance: '生命保険等の額',
+                    securities: '有価証券等の金融資産（自社株以外）',
+                    amountOfLifeInsurance: '生命保険の額',
                     otherAssets: 'その他財産（貸付金等）',
                     debts: '債務',
                   }[fieldName]

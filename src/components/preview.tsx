@@ -455,11 +455,11 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
                 <p className="">{formatCurrency(transformedData.realEstate)}</p>
               </div>
               <div className="flex">
-                <p className="text-back  font-medium sm:w-[180px] min-w-[165px] max-w-[165px] ">有価証券（自社株以外）:</p>
+                <p className="text-back  font-medium sm:w-[180px] min-w-[165px] max-w-[165px] ">有価証券等の金融資産（自社株以外）:</p>
                 <p className="">{formatCurrency(transformedData.securities)}</p>
               </div>
               <div className="flex">
-                <p className="text-back  font-medium sm:w-[180px] min-w-[165px] max-w-[165px] ">生命保険等の額:</p>
+                <p className="text-back  font-medium sm:w-[180px] min-w-[165px] max-w-[165px] ">生命保険の額:</p>
                 <p className="">{formatCurrency(transformedData.amountOfLifeInsurance)}</p>
               </div>
               <div className="flex">
