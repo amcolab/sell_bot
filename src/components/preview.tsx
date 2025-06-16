@@ -521,7 +521,7 @@ const Preview: React.FC<PreviewProps> = ({ data, userId, onConfirm, onBack, isSu
 
       {/* Payment Information */}
       <div className="bg-white p-2 sm:p-6 rounded-lg shadow">
-        <h2 className="text-xl font-bold mb-4">支払情報に修正</h2>
+        <h2 className="text-xl font-bold mb-4">支払情報</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[14px] sm:text-[16px]">
           <div className="flex">
             <p className="text-back  font-medium sm:w-[180px] min-w-[165px] max-w-[165px] ">金額:</p>
