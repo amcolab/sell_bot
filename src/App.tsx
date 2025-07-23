@@ -24,8 +24,10 @@ function App() {
   const [currentDate] = useState(new Date().toISOString().split('T')[0])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [isInitialLoading, setIsInitialLoading] = useState(true)
-  const [price, setPrice] = useState<any>()
+  const [price, setPrice] = useState<any>(() => {
+    const savedPrice = localStorage.getItem('price')
+    return savedPrice ? JSON.parse(savedPrice) : undefined
+  })
   const [showPreview, setShowPreview] = useState(false)
   const [formData, setFormData] = useState<any>(null)
   const [isSubmittingForm, setIsSubmittingForm] = useState(false)
@@ -459,129 +461,119 @@ function App() {
     
       const result = await response.json()
       setPrice(result.data)
+      localStorage.setItem('price', JSON.stringify(result.data))
       return result
     } catch (error) {
       console.error('Error fetching voucher:', error)
     } finally {
       setIsLoading(false)
-      setIsInitialLoading(false)
     }
   }
   
   const voucher = watch('voucher')
   const [debouncedVoucher] = useDebounce(voucher, 800)
-  
+  const [prevVoucher, setPrevVoucher] = useState<string | null>(null)
+
   useEffect(() => {
-    handleFetchVoucher(debouncedVoucher)
-  }, [debouncedVoucher])
+    if (
+      debouncedVoucher ||
+      (applicationType === '主たる法人のみ' || applicationType === '子会社含む')
+    ) {
+      if (!price || prevVoucher !== debouncedVoucher) {
+        handleFetchVoucher(debouncedVoucher)
+      }
+    } else {
+      localStorage.removeItem('price')
+      setPrice(undefined)
+    }
+  }, [debouncedVoucher, applicationType])
   
 
-  if (isInitialLoading) {
-    return (
+  return (
+    <>
       <div className='min-h-screen bg-[#f5f5f5] flex justify-center items-center'>
         <div className='w-full min-h-screen bg-white rounded-lg overflow-hidden shadow-[0_10px_30px_rgba(0,0,20,0.1)]'>
-          <div className='text-white p-5 text-center'>
+          <div className=' text-white p-5 text-center'>
             <div className='flex justify-center w-full'>
-              <div className='h-[50px] relative left-5'>
+              <div className=' h-[50px] relative left-5'>
                 <img src={Logo} alt='logo' className='w-[500px] h-[70px] max-w-none' />
               </div>
             </div>
           </div>
-          <div className='p-3 flex justify-center items-center min-h-[400px]'>
-            <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500'></div>
+
+          <div className='p-3'>
+            {bankTransferDetails ? 
+            (
+              <PaymentResult bankTransferDetails={bankTransferDetails} />
+            ) : showPreview ? (
+              <Preview
+                data={formData}
+                userId={userId}
+                onConfirm={handleConfirm}
+                onBack={handleBack}
+                isSubmitting={isSubmitting}
+              />
+            ) : (
+              <form onSubmit={handleSubmit(onSubmit, scrollToFirstError)}>
+                <InformationForm
+                  control={control}
+                  errors={errors}
+                  saveDataToLocalStorage={saveDataToLocalStorage}
+                  setValue={setValue}
+                  setError={setError}
+                />
+                <ResultDeliveryMethod
+                  control={control}
+                  errors={errors}
+                  saveDataToLocalStorage={saveDataToLocalStorage}
+                  setValue={setValue}
+                  setError={setError}
+                  watch={watch}
+                />
+                <RegistrationContent
+                  control={control}
+                  errors={errors}
+                  saveDataToLocalStorage={saveDataToLocalStorage}
+                  watch={watch}
+                  price={price}
+                  setValue={setValue}
+                  getValues={getValues}
+                />
+                <BusinessInformation
+                  control={control}
+                  errors={errors}
+                  saveDataToLocalStorage={saveDataToLocalStorage}
+                  ensureSubsidiaryStructure={ensureSubsidiaryStructure}
+                  setValue={setValue}
+                  setError={setError}
+                />
+                <DefinedBenefit
+                  control={control}
+                  errors={errors}
+                  saveDataToLocalStorage={saveDataToLocalStorage}
+                  watch={watch}
+                />
+                <InheritedAssets
+                  control={control}
+                  errors={errors}
+                  saveDataToLocalStorage={saveDataToLocalStorage}
+                  watch={watch}
+                  setValue={setValue}
+                />
+                <Button
+                  type='submit'
+                  title='確認画面へ'
+                  styleBtn='primary'
+                  className={`mt-2.5 ${isSubmittingForm || isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  disabled={isSubmittingForm || isLoading}
+                >
+                  {isSubmittingForm ? '送信中...' : '確認画面へ'}
+                </Button>
+              </form>
+            )}
           </div>
         </div>
       </div>
-    )
-  }
-
-  return (
-    <>
-      {price && (
-        <div className='min-h-screen bg-[#f5f5f5] flex justify-center items-center'>
-          <div className='w-full min-h-screen bg-white rounded-lg overflow-hidden shadow-[0_10px_30px_rgba(0,0,20,0.1)]'>
-            <div className=' text-white p-5 text-center'>
-              <div className='flex justify-center w-full'>
-                <div className=' h-[50px] relative left-5'>
-                  <img src={Logo} alt='logo' className='w-[500px] h-[70px] max-w-none' />
-                </div>
-              </div>
-            </div>
-
-            <div className='p-3'>
-              {bankTransferDetails ? 
-              (
-                <PaymentResult bankTransferDetails={bankTransferDetails} />
-              ) : showPreview ? (
-                <Preview
-                  data={formData}
-                  userId={userId}
-                  onConfirm={handleConfirm}
-                  onBack={handleBack}
-                  isSubmitting={isSubmitting}
-                />
-              ) : (
-                <form onSubmit={handleSubmit(onSubmit, scrollToFirstError)}>
-                  <InformationForm
-                    control={control}
-                    errors={errors}
-                    saveDataToLocalStorage={saveDataToLocalStorage}
-                    setValue={setValue}
-                    setError={setError}
-                  />
-                  <ResultDeliveryMethod
-                    control={control}
-                    errors={errors}
-                    saveDataToLocalStorage={saveDataToLocalStorage}
-                    setValue={setValue}
-                    setError={setError}
-                    watch={watch}
-                  />
-                  <RegistrationContent
-                    control={control}
-                    errors={errors}
-                    saveDataToLocalStorage={saveDataToLocalStorage}
-                    watch={watch}
-                    price={price}
-                    setValue={setValue}
-                    getValues={getValues}
-                  />
-                  <BusinessInformation
-                    control={control}
-                    errors={errors}
-                    saveDataToLocalStorage={saveDataToLocalStorage}
-                    ensureSubsidiaryStructure={ensureSubsidiaryStructure}
-                    setValue={setValue}
-                    setError={setError}
-                  />
-                  <DefinedBenefit
-                    control={control}
-                    errors={errors}
-                    saveDataToLocalStorage={saveDataToLocalStorage}
-                    watch={watch}
-                  />
-                  <InheritedAssets
-                    control={control}
-                    errors={errors}
-                    saveDataToLocalStorage={saveDataToLocalStorage}
-                    watch={watch}
-                    setValue={setValue}
-                  />
-                  <Button
-                    type='submit'
-                    title='確認画面へ'
-                    styleBtn='primary'
-                    className='mt-2.5'
-                    disabled={isSubmittingForm || isLoading}
-                  >
-                    {isSubmittingForm ? '送信中...' : '確認画面へ'}
-                  </Button>
-                </form>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </>
   )
 }
