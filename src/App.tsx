@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import liff from '@line/liff'
 import './App.css'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -18,9 +17,11 @@ import Preview from './components/preview'
 import Logo from './assets/logo/logo.jpg'
 import { getIndustryById } from './utils/industryUtils'
 import PaymentResult from './components/bank-transfer-preview'
+import { useLiffUser } from "./hooks/useLiffUser";
 
 function App() {
-  const [userId, setUserId] = useState<string | null>(null)
+  const { userId, isInitialized, error } = useLiffUser()
+
   const [currentDate] = useState(new Date().toISOString().split('T')[0])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -262,48 +263,17 @@ function App() {
       })
     }
 
-    const liffId = import.meta.env.VITE_LIFF_ID
-    if (!liffId) {
-      console.error(
-        'LIFF ID is not defined. Please set VITE_LIFF_ID in your .env file.'
-      )
-      return
-    }
-
-    liff
-      .init({ liffId })
-      .then(() => {
-        if (!liff.isLoggedIn()) {
-          liff.login()
-        } else {
-          return Promise.resolve()
-        }
-      })
-      .then(() => {
-        if (liff.isLoggedIn()) {
-          return liff.getProfile()
-        }
-        return null
-      })
-      .then((profile) => {
-        if (profile) {
-          setUserId(profile.userId)
-          localStorage.setItem('userId', profile.userId)
-        }
-      })
-      .catch((err) => {
-        console.error('LIFF initialization or profile retrieval failed', err)
-      })
-
-    // Load saved form data from localStorage when component mounts
     const savedData = getSavedFormData()
-   
-    // Set values for all fields including nested ones
+
     const setNestedValues = (obj: any, prefix = '') => {
       Object.entries(obj).forEach(([key, value]) => {
         const fullPath = prefix ? `${prefix}.${key}` : key
 
-        if (value !== null && typeof value === 'object') {
+        if (Array.isArray(value)) {
+          value.forEach((item, index) => {
+            setNestedValues(item, `${fullPath}.${index}`)
+          })
+        } else if (value !== null && typeof value === 'object') {
           setNestedValues(value, fullPath)
         } else {
           setValue(fullPath, value)
@@ -312,7 +282,9 @@ function App() {
     }
 
     setNestedValues(savedData)
-  }, [setValue])
+    localStorage.setItem('formData', JSON.stringify(savedData))
+  }, [setValue, userId])
+
   const scrollToFirstError = () => {
     // First scroll to top of the form
     const formElement = document.querySelector('form')
@@ -487,7 +459,22 @@ function App() {
       setPrice(undefined)
     }
   }, [debouncedVoucher, applicationType])
-  
+
+  if (!isInitialized) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p>Loading LIFF...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-red-500">LIFF error: {error.message}</p>
+      </div>
+    )
+  }
 
   return (
     <>
